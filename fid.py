@@ -10,6 +10,46 @@ from tqdm import tqdm
 from model import Generator
 from calc_inception import load_patched_inception_v3
 
+## MB METHOD
+@torch.no_grad()
+def extract_feature_from_saved_samples(
+    path, inception, batch_size, n_sample, device
+):
+    n_batch = n_sample // batch_size
+    resid = n_sample - (n_batch * batch_size)
+    batch_sizes = [batch_size] * n_batch + [resid]
+    features = []
+
+    for batch in tqdm(batch_sizes):
+        #latent = torch.randn(batch, 512, device=device)
+        #img, _ = g([latent], truncation=truncation, truncation_latent=truncation_latent)
+    files = list(path.glob('*.jpg')) + list(path.glob('*.png'))
+    for i in tqdm(range(n_batch)):
+        if verbose:
+            print('\rPropagating batch %d/%d' % (i + 1, n_batches),
+                  end='', flush=True)
+        start = i * batch_size
+        end = start + batch_size
+
+        images = np.array([imread(str(f)).astype(np.float32)
+                           for f in files[start:end]])
+
+        # Reshape to (n_images, 3, height, width)
+        images = images.transpose((0, 3, 1, 2)) 
+        images /= 255 
+
+        img = torch.from_numpy(images).type(torch.FloatTensor)
+        if cuda:
+            batch = batch.cuda()
+
+        feat = inception(img)[0].view(img.shape[0], -1)
+        features.append(feat.to('cpu'))
+
+    features = torch.cat(features, 0)
+
+    return features
+
+
 
 @torch.no_grad()
 def extract_feature_from_samples(
@@ -69,29 +109,35 @@ if __name__ == '__main__':
     parser.add_argument('--size', type=int, default=256)
     parser.add_argument('--inception', type=str, default=None, required=True)
     parser.add_argument('ckpt', metavar='CHECKPOINT')
+    parser.add_argument('--img_path', type=str, default='')
 
     args = parser.parse_args()
-
-    ckpt = torch.load(args.ckpt)
-
-    g = Generator(args.size, 512, 8).to(device)
-    g.load_state_dict(ckpt['g_ema'])
-    g = nn.DataParallel(g)
-    g.eval()
-
-    if args.truncation < 1:
-        with torch.no_grad():
-            mean_latent = g.mean_latent(args.truncation_mean)
-
-    else:
-        mean_latent = None
-
     inception = nn.DataParallel(load_patched_inception_v3()).to(device)
     inception.eval()
 
-    features = extract_feature_from_samples(
-        g, inception, args.truncation, mean_latent, args.batch, args.n_sample, device
-    ).numpy()
+    if args.img_path ! = '':
+        features = extract_feature_from_saved_samples(
+            args.img_path, inception, args.truncation, mean_latent, args.batch, args.n_sample, device
+        ).numpy()
+    else:
+        ckpt = torch.load(args.ckpt)
+
+        g = Generator(args.size, 512, 8).to(device)
+        g.load_state_dict(ckpt['g_ema'])
+        g = nn.DataParallel(g)
+        g.eval()
+
+        if args.truncation < 1:
+            with torch.no_grad():
+                mean_latent = g.mean_latent(args.truncation_mean)
+
+        else:
+            mean_latent = None
+
+
+        features = extract_feature_from_samples(
+            g, inception, args.truncation, mean_latent, args.batch, args.n_sample, device
+        ).numpy()
     print(f'extracted {features.shape[0]} features')
 
     sample_mean = np.mean(features, 0)

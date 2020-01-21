@@ -463,7 +463,6 @@ class Generator(nn.Module):
             n_latent, self.style_dim, device=self.input.input.device
         )
         latent = self.style(latent_in).mean(0, keepdim=True)
-
         return latent
 
     def get_latent(self, input):

@@ -27,22 +27,6 @@ def slerp(a, b, t):
 def lerp(a, b, t):
     return a + (b - a) * t
 
-
-if __name__ == '__main__':
-    device = 'cuda'
-
-    parser = argparse.ArgumentParser()
-
-    parser.add_argument('--space', choices=['z', 'w'])
-    parser.add_argument('--batch', type=int, default=64)
-    parser.add_argument('--n_sample', type=int, default=5000)
-    parser.add_argument('--size', type=int, default=256)
-    parser.add_argument('--eps', type=float, default=1e-4)
-    parser.add_argument('--crop', action='store_true')
-    parser.add_argument('ckpt', metavar='CHECKPOINT')
-
-    args = parser.parse_args()
-
     latent_dim = 512
 
     ckpt = torch.load(args.ckpt)

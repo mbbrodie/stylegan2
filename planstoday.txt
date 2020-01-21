@@ -1,0 +1,43 @@
+c:stylegan
+# if this works--just do 5 datasets out of stylegan.
+
+    c:todo
+        c:set random seed
+        c:load args for TTT
+        c:save 1 image from every method.
+            c:for i in combinations
+    basearg = {...}
+
+    #comparison methods
+    for method in methods:
+        args.method = method
+        args.savedir = join( args.base_exp_name,  method)
+        run(args)
+
+    #our methods
+    #if args.train ==> train then sample
+    for nl in nlayer
+        args.nlayer = nl
+        for arch in architectures:
+            args.arch = arch
+            for method in methods:
+                args.method = method
+                args.savedir = join( args.base_exp_name,  method)
+                run(args)
+
+            
+    c:tests
+        c:single image samples
+    c:metrics
+        FID
+            # mention discrepancy between pytorch and inception weights
+        LPIPS (their versions)
+            
+c:pggan
+    c:transfer after success with stylegan (if time)
+
+
+q:how run all of these experiments?
+auto gen? manually?
+honestly, there aren't that many combinations
+4 comparisons
