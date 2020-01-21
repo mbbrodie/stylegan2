@@ -69,7 +69,7 @@ def run(args):
 from os.path import join
 import easydict
 args = easydict.EasyDict()
-args.n_eval_samples = 1
+args.n_eval_samples = 4
 args.path = '/content/stylegan2/results' #gdrive probably
 
 args.repo = './stylegan2'
