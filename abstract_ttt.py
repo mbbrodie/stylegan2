@@ -20,9 +20,9 @@ class TTTExperiment(abc.ABC):
     @abc.abstractmethod
     def sample_w(self, **kwargs):
         pass
-    #@abc.abstractmethod
-    #def sample_n_stylegan_images_without_tt(self, **kwargs):
-    #    pass
+    @abc.abstractmethod
+    def sample_n_stylegan_images_without_tt(self, **kwargs):
+        pass
     @abc.abstractmethod
     def sample_n_stylegan_images_with_w_ttl(self, **kwargs):
         pass

@@ -34,7 +34,7 @@ def run(args):
         ##comparison methods
         #if args.method in comparison_methods: #= ['normal','coachz','coachw','ttz','ttw']
         if args.method == 'normal':
-            e.gen_from_w() 
+            e.sample_n_stylegan_images_without_tt()
         if args.method == 'coachz':
             e.sample_n_stylegan_images_with_coachgan()
         if args.method == 'coachw':

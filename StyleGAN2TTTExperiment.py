@@ -7,6 +7,7 @@ from torch.nn import functional as F
 from torchvision.utils import save_image
 from ttt import TTT
 from pdip import PDIP # do for generator.features
+from model import Generator, Discriminator
 
 args = None
 class StyleGAN2TTTExperiment(TTTExperiment):
@@ -20,15 +21,17 @@ class StyleGAN2TTTExperiment(TTTExperiment):
     def gen_from_z(self):
         args.fake = args.g(args.z)
     def gen_from_w(self):
+        print(args.z.size())
+        print(args.w.size())
         args.fake = args.g(args.w, input_is_latent=True)
 
     def setup(self, **kwargs):
-        checkpoint = torch.load(args.ckpt)
+        checkpoint = torch.load(args.checkpoint)
 
         g_ema = Generator(
             args.size, args.latent, args.n_mlp, channel_multiplier=args.channel_multiplier
         ).to(args.device)
-        g_ema.load_state_dict(checkpoint['g_ema'])
+        g_ema.load_state_dict(checkpoint['g_ema'],strict=False)
         args['g'] = g_ema
 
         discriminator = Discriminator(
@@ -44,7 +47,7 @@ class StyleGAN2TTTExperiment(TTTExperiment):
             save_image(images, os.path.join(args.savedir, str(i)+'.png'),normalize=True)
     
     def sample_z(self, **kwargs):
-        sample_z = torch.randn(args.sample, args.latent, device=device)
+        sample_z = torch.randn(args.n_eval_samples, args.latent, device=args.device)
         args['z'] = sample_z
 
     def sample_w(self, **kwargs):
@@ -52,7 +55,7 @@ class StyleGAN2TTTExperiment(TTTExperiment):
             self.sample_z()
         args['w'] = args['g'].get_latent(args.z)
     
-        return a + (b - a) * t
+        #return a + (b - a) * t
 
     def set_np_random_state_with_seed(self,seed):
         args.state = np.random.RandomState(seed)
@@ -64,6 +67,10 @@ class StyleGAN2TTTExperiment(TTTExperiment):
     def truncate_w_with_lerp(self):
         mean_w = args.g.mean_latent(args.w.size(0))
         args['w'] = self.lerp(mean_w, args.w, args.truncation)
+
+    def sample_n_stylegan_images_without_tt(self, **kwargs):
+        self.sample_w()
+        self.gen_from_w()
 
     def sample_n_stylegan_images_with_w_ttl(self, **kwargs):
         self.sample_w()
