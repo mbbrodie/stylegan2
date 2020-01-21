@@ -19,7 +19,6 @@ class StyleGAN2TTTExperiment(TTTExperiment):
         args.fake = args.g(args.z)
     def gen_from_w(self):
         args.fake = args.g(args.w, input_is_latent=True)
-    def set_args(self, args):
     
     def setup(self, **kwargs):
         """return G in train mode on CPU"""
@@ -57,14 +56,14 @@ class StyleGAN2TTTExperiment(TTTExperiment):
     
         return a + (b - a) * t
 
-    def set_np_random_state_with_seed(self,seed)
+    def set_np_random_state_with_seed(self,seed):
         args.state = np.random.RandomState(seed)
 
-    def truncate_z(self)
+    def truncate_z(self):
         # add existing scipy truncnorm code
         args.z = truncnorm.rvs(-1*args.truncation, args.truncation, size=(args.batch_size, args.dim_z), random_state=args.state).astype(np.float32)
         
-    def truncate_w_with_lerp(self)
+    def truncate_w_with_lerp(self):
         mean_w = args.g.mean_latent(args.w.size(0))
         args['w'] = self.lerp(mean_w, args.w, args.truncation)
 
