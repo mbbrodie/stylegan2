@@ -1,6 +1,7 @@
 ### this will be copied to colab
 ### everything else imported
 from StyleGAN2TTTExperiment import StyleGAN2TTTExperiment
+import sys
 
 
 def run(args):
@@ -67,8 +68,17 @@ def run(args):
 from os.path import join
 import easydict
 args = easydict.EasyDict()
-args.n_eval_samples = 10
+args.n_eval_samples = 1
 args.path = '/content' #gdrive probably
+
+args.repo = './stylegan2'
+sys.path.append(args.repo)
+
+import dnnlib
+from dnnlib import tflib
+
+tflib.init_tf()
+
 import metrics
 
 #comparison methods
@@ -77,6 +87,7 @@ args.dataset = 'ffhq'
 args.path ='/content'
 args.base_exp_name='testing'
 args.size = 1024 if args.dataset == 'ffhq' else 256
+#args.size = 256 if args.dataset == 'ffhq' else 256
 args.checkpoint = 'stylegan2-%s-config-f.pt' % args.dataset
 args.channel_multiplier = 2
 args.latent = 512

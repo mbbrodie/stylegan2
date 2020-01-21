@@ -8,6 +8,7 @@ from torchvision.utils import save_image
 from ttt import TTT
 from pdip import PDIP # do for generator.features
 from model import Generator, Discriminator
+from os.path import join
 
 args = None
 class StyleGAN2TTTExperiment(TTTExperiment):
@@ -19,11 +20,9 @@ class StyleGAN2TTTExperiment(TTTExperiment):
         global args
         args = a
     def gen_from_z(self):
-        args.fake = args.g(args.z)
+        args.fake = args.g([args.z])
     def gen_from_w(self):
-        print(args.z.size())
-        print(args.w.size())
-        args.fake = args.g(args.w, input_is_latent=True)
+        args.fake = args.g([args.w], input_is_latent=True)
 
     def setup(self, **kwargs):
         checkpoint = torch.load(args.checkpoint)
@@ -32,19 +31,20 @@ class StyleGAN2TTTExperiment(TTTExperiment):
             args.size, args.latent, args.n_mlp, channel_multiplier=args.channel_multiplier
         ).to(args.device)
         g_ema.load_state_dict(checkpoint['g_ema'],strict=False)
+        #g_ema.load_state_dict(checkpoint['g'],strict=False)
         args['g'] = g_ema
 
         discriminator = Discriminator(
             args.size, channel_multiplier=args.channel_multiplier
         ).to(args.device)
-        discriminator.load_state_dict(checkpoint['d'])
+        discriminator.load_state_dict(checkpoint['d'],strict=False)
         args['d'] = discriminator
 
     def save_results(self, **kwargs):
         for img in args.fake:
             images = img.cpu()
             images = torch.nn.functional.interpolate(images,size=(299,299))
-            save_image(images, os.path.join(args.savedir, str(i)+'.png'),normalize=True)
+            save_image(images, join(args.savedir, str(i)+'.png'),normalize=True)
     
     def sample_z(self, **kwargs):
         sample_z = torch.randn(args.n_eval_samples, args.latent, device=args.device)
