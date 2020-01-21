@@ -20,9 +20,9 @@ def extract_feature_from_saved_samples(
     batch_sizes = [batch_size] * n_batch + [resid]
     features = []
 
-    for batch in tqdm(batch_sizes):
-        #latent = torch.randn(batch, 512, device=device)
-        #img, _ = g([latent], truncation=truncation, truncation_latent=truncation_latent)
+    #for batch in tqdm(batch_sizes):
+    #latent = torch.randn(batch, 512, device=device)
+    #img, _ = g([latent], truncation=truncation, truncation_latent=truncation_latent)
     files = list(path.glob('*.jpg')) + list(path.glob('*.png'))
     for i in tqdm(range(n_batch)):
         if verbose:
@@ -115,7 +115,7 @@ if __name__ == '__main__':
     inception = nn.DataParallel(load_patched_inception_v3()).to(device)
     inception.eval()
 
-    if args.img_path ! = '':
+    if args.img_path != '':
         features = extract_feature_from_saved_samples(
             args.img_path, inception, args.truncation, mean_latent, args.batch, args.n_sample, device
         ).numpy()

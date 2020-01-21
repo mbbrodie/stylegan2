@@ -21,26 +21,22 @@ class StyleGAN2TTTExperiment(TTTExperiment):
         args.fake = args.g(args.z)
     def gen_from_w(self):
         args.fake = args.g(args.w, input_is_latent=True)
-    
+
     def setup(self, **kwargs):
-        """return G in train mode on CPU"""
+        checkpoint = torch.load(args.ckpt)
+
         g_ema = Generator(
             args.size, args.latent, args.n_mlp, channel_multiplier=args.channel_multiplier
-        ).to(device)
-        checkpoint = torch.load(args.ckpt)
+        ).to(args.device)
         g_ema.load_state_dict(checkpoint['g_ema'])
         args['g'] = g_ema
-        """return D in train mode on CPU"""
+
         discriminator = Discriminator(
             args.size, channel_multiplier=args.channel_multiplier
-        ).to(device)
-        checkpoint = torch.load(args.ckpt)
+        ).to(args.device)
         discriminator.load_state_dict(checkpoint['d'])
         args['d'] = discriminator
-        return
 
-
-    
     def save_results(self, **kwargs):
         for img in args.fake:
             images = img.cpu()

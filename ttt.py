@@ -151,7 +151,7 @@ def make_block(insize,arch,last=False):
                 nn.PReLU(),
 
                 nn.Linear(insize,insize/2),
-                nn.BatchNorm1d(insize/2)
+                nn.BatchNorm1d(insize/2),
                 nn.PReLU(),
 
                 nn.Linear(insize/2,insize),

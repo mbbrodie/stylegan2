@@ -1,10 +1,13 @@
 ### this will be copied to colab
 ### everything else imported
-from StyleGAN2TTTExperiment import StyleGAN2TTTExperiment as e
+from StyleGAN2TTTExperiment import StyleGAN2TTTExperiment
 
 
 def run(args):
+    e = StyleGAN2TTTExperiment() 
+    print(args)
     e.set_args(args)
+    e.setup()
     ## SETUP
     #if args.TTT:
     if args.method == 'TNet+TTT' or args.method == 'TTTz':
@@ -61,7 +64,7 @@ def run(args):
 #parser.add_argument('--w_TTT', action='store_true', help='use TTT for w')
 #parser.add_argument('--coach_z', action='store_true', help='use CoachGAN for z')
 #parser.add_argument('--coach_w', action='store_true', help='use CoachGAN for w')
-import os.path.join as join
+from os.path import join
 import easydict
 args = easydict.EasyDict()
 args.n_eval_samples = 10
@@ -69,9 +72,16 @@ args.path = '/content' #gdrive probably
 import metrics
 
 #comparison methods
-datasets = ['ffhq','cat','horse','churche','car']
-args.dataset = ['ffhq']
+datasets = ['ffhq','cat','horse','church','car']
+args.dataset = 'ffhq'
 args.path ='/content'
+args.base_exp_name='testing'
+args.size = 1024 if args.dataset == 'ffhq' else 256
+args.checkpoint = 'stylegan2-%s-config-f.pt' % args.dataset
+args.channel_multiplier = 2
+args.latent = 512
+args.n_mlp = 8
+args.device = 'cuda'
 
 comparison_methods = ['normal','coachz','coachw','ttz','ttw']
 for method in comparison_methods:

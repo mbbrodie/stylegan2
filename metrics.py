@@ -16,9 +16,9 @@ def extract_feature_from_saved_samples(
     batch_sizes = [batch_size] * n_batch + [resid]
     features = []
 
-    for batch in tqdm(batch_sizes):
-        #latent = torch.randn(batch, 512, device=device)
-        #img, _ = g([latent], truncation=truncation, truncation_latent=truncation_latent)
+    #for batch in tqdm(batch_sizes):
+    #latent = torch.randn(batch, 512, device=device)
+    #img, _ = g([latent], truncation=truncation, truncation_latent=truncation_latent)
     files = list(path.glob('*.jpg')) + list(path.glob('*.png'))
     for i in tqdm(range(n_batch)):
         if verbose:

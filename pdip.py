@@ -16,7 +16,7 @@ class PDIP(nn.Module):
             #nn.PReLU(),
             net = nn.Sequential()
             for n in range(nlayers):
-                net.add_module(make_pdip_block(nch,arch)
+                net.add_module(make_pdip_block(nch,arch))
                 #net.add_module('conv'+str(n), nn.Conv2d(nch, nch, 1, stride=1, bias=False) )
                 #net.add_module('prelu'+str(n), nn.PReLU() )
             #net = nn.Sequential(nn.Conv2d(nch, nch, 3, 1, 1, bias=False),nn.BatchNorm2d(nch),nn.ReLU()) 
@@ -105,7 +105,7 @@ def make_pdip_block(insize,arch,last=False):
                 )
     elif arch == 'prelu':
         return nn.Sequential(
-                nn.Conv2d(insize, insize, 1, stride=1, bias=False)
+                nn.Conv2d(insize, insize, 1, stride=1, bias=False),
                 nn.PReLU(),
                 )
     elif arch == 'sigmoid':
