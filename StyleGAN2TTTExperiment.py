@@ -5,6 +5,8 @@ import numpy as np
 from scipy.stats import truncnorm
 from torch.nn import functional as F
 from torchvision.utils import save_image
+from ttt import TTT
+from pdip import PDIP # do for generator.features
 
 args = None
 class StyleGAN2TTTExperiment(TTTExperiment):
@@ -115,15 +117,14 @@ class StyleGAN2TTTExperiment(TTTExperiment):
     def w_ttt(self):
         args.w = args.wttt( args.w )
     
-
     def setup_prenetwork_w_ttt(self, **kwargs):
-        args['wttt'] = TTT(pass)
+        args['wttt'] = TTT(args.nlayer, nz=args.z.size(1),arch=args.arch)
 
     def setup_prenetwork_ttt(self, **kwargs):
-        args['ttt'] = TTT(pass)
+        args['ttt'] = TTT(args.nlayer, nz=args.z.size(1),arch=args.arch)
     
     def setup_intranetwork_ttt(self, **kwargs):
-        args['g'] = PDIP(g)
+        args['g'] = PDIP(model=g.features,arch=args.arch,nlayers=args.nlayer, size=args.w.size())
     
     ## OPTIMIZER SETUP ##
     def get_optimizer(self, net):

@@ -98,7 +98,7 @@ layers = [2,4,8,16,32,64,128,256]
 #d\item FBP + x
 #e\item FBP-FB + x
 #f\item FBP-F_${bottleneck}$BP-FB + 
-blocks = ['a','b','c','d','e','f','prelu']
+architectures = ['a','b','c','d','e','f','prelu']
 #our methods
 #if args.train ==> train then sample
 for nl in nlayer:
