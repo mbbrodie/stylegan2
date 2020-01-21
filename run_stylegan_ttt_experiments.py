@@ -101,7 +101,7 @@ layers = [2,4,8,16,32,64,128,256]
 blocks = ['a','b','c','d','e','f','prelu']
 #our methods
 #if args.train ==> train then sample
-for nl in nlayer
+for nl in nlayer:
     args.nlayer = nl
     for arch in architectures:
         args.arch = arch
