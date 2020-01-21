@@ -85,7 +85,7 @@ import metrics
 #comparison methods
 datasets = ['ffhq','cat','horse','church','car']
 args.dataset = 'ffhq'
-args.path ='/content'
+args.path ='/content/stylegan2/results'
 args.base_exp_name='testing'
 args.size = 1024 if args.dataset == 'ffhq' else 256
 #args.size = 256 if args.dataset == 'ffhq' else 256
