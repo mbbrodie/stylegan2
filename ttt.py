@@ -8,9 +8,6 @@ class TruncationTrick(nn.Module):
     def __init__(self,version='basic',psi=0.7):
         super(TruncationTrick, self).__init__()
         self.version = version
-        if version == 'basic':
-        if version == 'lerp':
-        if version == 'sigma':
 
     def truncated_noise_sample(self,batch_size=1, dim_z=512, truncation=1., seed=None):
         state = None if seed is None else np.random.RandomState(seed)
@@ -106,51 +103,51 @@ class TTT(nn.Module):
 def make_block(insize,arch,last=False):
     if arch == 'a' :#a\item BPF + x
         return nn.Sequential(
-                nn.BatchNorm1d(insize)
+                nn.BatchNorm1d(insize),
                 nn.PReLU(),
                 nn.Linear(insize,insize),
                 )
     elif arch =='b': #b\item BPF-BF + x
         return nn.Sequential(
-                nn.BatchNorm1d(insize)
+                nn.BatchNorm1d(insize),
                 nn.PReLU(),
                 nn.Linear(insize,insize),
 
-                nn.BatchNorm1d(insize)
+                nn.BatchNorm1d(insize),
                 nn.Linear(insize,insize),
                 )
     elif arch =='c': #c\item BPF-BPF$_{bottleneck}$-BF + 
         return nn.Sequential(
-                nn.BatchNorm1d(insize)
+                nn.BatchNorm1d(insize),
                 nn.PReLU(),
                 nn.Linear(insize,insize),
 
-                nn.BatchNorm1d(insize)
+                nn.BatchNorm1d(insize),
                 nn.PReLU(),
                 nn.Linear(insize,insize/2),
 
-                nn.BatchNorm1d(insize/2)
+                nn.BatchNorm1d(insize/2),
                 nn.Linear(insize/2,insize),
                 )
     elif arch =='d': #d\item FBP + x
         return nn.Sequential(
                 nn.Linear(insize,insize),
-                nn.BatchNorm1d(insize)
+                nn.BatchNorm1d(insize),
                 nn.PReLU(),
                 )
     elif arch =='e': #e\item FBP-FB + x
         return nn.Sequential(
                 nn.Linear(insize,insize),
-                nn.BatchNorm1d(insize)
+                nn.BatchNorm1d(insize),
                 nn.PReLU(),
 
                 nn.Linear(insize,insize),
-                nn.BatchNorm1d(insize)
+                nn.BatchNorm1d(insize),
                 )
     elif arch =='f': #f\item FBP-F_${bottleneck}$BP-FB + 
         return nn.Sequential(
                 nn.Linear(insize,insize),
-                nn.BatchNorm1d(insize)
+                nn.BatchNorm1d(insize),
                 nn.PReLU(),
 
                 nn.Linear(insize,insize/2),
@@ -158,7 +155,7 @@ def make_block(insize,arch,last=False):
                 nn.PReLU(),
 
                 nn.Linear(insize/2,insize),
-                nn.BatchNorm1d(insize)
+                nn.BatchNorm1d(insize),
                 )
     elif arch == 'linear'  or last:
         return nn.Sequential(

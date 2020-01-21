@@ -35,59 +35,59 @@ class PDIP(nn.Module):
 def make_pdip_block(insize,arch,last=False):
     if arch == 'a' :#a\item BPF + x
         return nn.Sequential(
-                nn.BatchNorm2d(insize)
+                nn.BatchNorm2d(insize),
                 nn.PReLU(),
                 nn.Conv2d(insize, insize, 1, stride=1, bias=False)
                 )
     elif arch =='b': #b\item BPF-BF + x
         return nn.Sequential(
-                nn.BatchNorm2d(insize)
+                nn.BatchNorm2d(insize),
                 nn.PReLU(),
-                nn.Conv2d(insize, insize, 1, stride=1, bias=False)
+                nn.Conv2d(insize, insize, 1, stride=1, bias=False),
 
-                nn.BatchNorm2d(insize)
-                nn.Conv2d(insize, insize, 1, stride=1, bias=False)
+                nn.BatchNorm2d(insize),
+                nn.Conv2d(insize, insize, 1, stride=1, bias=False),
                 )
     elif arch =='c': #c\item BPF-BPF$_{bottleneck}$-BF + 
         return nn.Sequential(
-                nn.BatchNorm2d(insize)
+                nn.BatchNorm2d(insize),
                 nn.PReLU(),
-                nn.Conv2d(insize, insize, 1, stride=1, bias=False)
+                nn.Conv2d(insize, insize, 1, stride=1, bias=False),
 
-                nn.BatchNorm2d(insize)
+                nn.BatchNorm2d(insize),
                 nn.PReLU(),
                 nn.Linear(insize,insize/2),
 
-                nn.BatchNorm2d(insize/2)
+                nn.BatchNorm2d(insize/2),
                 nn.Conv2d(insize/2, insize, 1, stride=1, bias=False)
                 )
     elif arch =='d': #d\item FBP + x
         return nn.Sequential(
-                nn.Conv2d(insize, insize, 1, stride=1, bias=False)
-                nn.BatchNorm2d(insize)
+                nn.Conv2d(insize, insize, 1, stride=1, bias=False),
+                nn.BatchNorm2d(insize),
                 nn.PReLU(),
                 )
     elif arch =='e': #e\item FBP-FB + x
         return nn.Sequential(
-                nn.Conv2d(insize, insize, 1, stride=1, bias=False)
-                nn.BatchNorm2d(insize)
+                nn.Conv2d(insize, insize, 1, stride=1, bias=False),
+                nn.BatchNorm2d(insize),
                 nn.PReLU(),
 
-                nn.Conv2d(insize, insize, 1, stride=1, bias=False)
-                nn.BatchNorm2d(insize)
+                nn.Conv2d(insize, insize, 1, stride=1, bias=False),
+                nn.BatchNorm2d(insize),
                 )
     elif arch =='f': #f\item FBP-F_${bottleneck}$BP-FB + 
         return nn.Sequential(
-                nn.Conv2d(insize, insize, 1, stride=1, bias=False)
-                nn.BatchNorm2d(insize)
+                nn.Conv2d(insize, insize, 1, stride=1, bias=False),
+                nn.BatchNorm2d(insize),
                 nn.PReLU(),
 
-                nn.Conv2d(insize, insize/2, 1, stride=1, bias=False)
-                nn.BatchNorm2d(insize/2)
+                nn.Conv2d(insize, insize/2, 1, stride=1, bias=False),
+                nn.BatchNorm2d(insize/2),
                 nn.PReLU(),
 
-                nn.Conv2d(insize/2, insize, 1, stride=1, bias=False)
-                nn.BatchNorm2d(insize)
+                nn.Conv2d(insize/2, insize, 1, stride=1, bias=False),
+                nn.BatchNorm2d(insize),
                 )
     elif arch == 'linear'  or last:
         return nn.Sequential(
