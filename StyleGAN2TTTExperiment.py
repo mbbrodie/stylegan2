@@ -157,7 +157,7 @@ class StyleGAN2TTTExperiment(TTTExperiment):
             opt.step()
     
     def train_intranetwork_ttt(self, **kwargs):
-        opt = get_optimizer(pass)
+        opt = get_optimizer(args.g.noise)
         for i in range(args.niter):
             opt.zero_grad()
             self.sample_n_stylegan_images_with_intranetwork_ttt()

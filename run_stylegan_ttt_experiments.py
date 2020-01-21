@@ -13,6 +13,7 @@ def run(args):
         e.setup_prenetwork_w_ttt()
     if args.method == 'TNet+TTT' or args.method == 'TNet':
         e.setup_intranetwork_ttt()
+    print('finished setup')
 
     ## TRAIN
     # may need to set train_sample_size
@@ -24,6 +25,7 @@ def run(args):
         e.train_prenetwork_ttt()
     elif args.method == 'TTTw':
         e.train_prenetwork_w_ttt()
+    print('finished train')
         
     for i in range(args.n_eval_samples):
         ##comparison methods
