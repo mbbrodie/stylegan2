@@ -103,6 +103,32 @@ class TTT(nn.Module):
                     residual = out
         return out
 
+class PDIP(nn.Module):
+    def __init__(self, model=None, size=(1,100,1,1),nlayers=2,device="cpu"):
+        super(PDIP, self).__init__()
+        if model is None:
+            return
+        self.model = nn.Sequential(*list(model.children()))
+        self.noise = []
+        x_fake = torch.randn(size).to(device)
+        for i,m in enumerate(self.model[:-1]):
+            x_fake = m(x_fake)
+            nch = x_fake.size()[1]
+            #nn.PReLU(),
+            net = nn.Sequential()
+            for n in range(nlayers):
+                net.add_module('conv'+str(n), nn.Conv2d(nch, nch, 1, stride=1, bias=False) )
+                net.add_module('prelu'+str(n), nn.PReLU() )
+            self.noise.append(net)
+        self.noise = nn.ModuleList(self.noise)
+
+    def forward(self, x):
+        for i,m in enumerate(self.model[:-1]):
+            x = m(x) 
+            x = self.noise[i](x) + x
+        x = self.model[-1](x)
+        return x
+
 def make_block(insize,arch,last=False):
     if arch == 'a' :#a\item BPF + x
         return nn.Sequential(
