@@ -2,6 +2,7 @@
 ### everything else imported
 from StyleGAN2TTTExperiment import StyleGAN2TTTExperiment
 import sys
+import os
 
 
 def run(args):
@@ -69,7 +70,7 @@ from os.path import join
 import easydict
 args = easydict.EasyDict()
 args.n_eval_samples = 1
-args.path = '/content' #gdrive probably
+args.path = '/content/stylegan2/results' #gdrive probably
 
 args.repo = './stylegan2'
 sys.path.append(args.repo)
@@ -99,6 +100,8 @@ for method in comparison_methods:
     print('method:',method)
     args.method = method
     args.savedir = join( args.path, args.base_exp_name,  method)
+    if not os.path.exists(args.savedir):
+        os.makedirs(args.savedir)
     run(args)
     exit() #TEMPORARY
 

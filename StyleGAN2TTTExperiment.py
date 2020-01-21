@@ -20,9 +20,9 @@ class StyleGAN2TTTExperiment(TTTExperiment):
         global args
         args = a
     def gen_from_z(self):
-        args.fake = args.g([args.z])
+        args.fake, _ = args.g([args.z])
     def gen_from_w(self):
-        args.fake = args.g([args.w], input_is_latent=True)
+        args.fake, _ = args.g([args.w], input_is_latent=True)
 
     def setup(self, **kwargs):
         checkpoint = torch.load(args.checkpoint)
@@ -41,8 +41,9 @@ class StyleGAN2TTTExperiment(TTTExperiment):
         args['d'] = discriminator
 
     def save_results(self, **kwargs):
-        for img in args.fake:
+        for i,img in enumerate(args.fake):
             images = img.cpu()
+            images = images.unsqueeze(0)
             images = torch.nn.functional.interpolate(images,size=(299,299))
             save_image(images, join(args.savedir, str(i)+'.png'),normalize=True)
     
