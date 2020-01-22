@@ -12,6 +12,7 @@ from op import FusedLeakyReLU, fused_leaky_relu, upfirdn2d
 
 import random
 import numpy as np
+"""
 seed = 0
 torch.manual_seed(seed)
 torch.cuda.manual_seed(seed)
@@ -21,6 +22,7 @@ random.seed(seed)  # Python random module.
 torch.manual_seed(seed)
 torch.backends.cudnn.benchmark = False
 torch.backends.cudnn.deterministic = True
+"""
 
 class PixelNorm(nn.Module):
     def __init__(self):
