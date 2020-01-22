@@ -114,7 +114,7 @@ torch.backends.cudnn.deterministic = True
 ## TESTING
 args.nlayer = 2
 args.arch = 'prelu'
-args.method = 'TTTz'
+args.method = 'TTTw'
 args.savedir = join( args.path, args.base_exp_name,  args.method)
 if not os.path.exists(args.savedir):
     os.makedirs(args.savedir)

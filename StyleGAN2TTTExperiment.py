@@ -137,10 +137,10 @@ class StyleGAN2TTTExperiment(TTTExperiment):
     def ttt(self):
         args.z = args.ttt( args.z )
     def w_ttt(self):
-        args.w = args.wttt( args.w )
+        args.w = args.w_ttt( args.w )
     
     def setup_prenetwork_w_ttt(self, **kwargs):
-        args['wttt'] = TTT(args.nlayer, nz=args.latent, arch=args.arch).cuda()
+        args['w_ttt'] = TTT(args.nlayer, nz=args.latent, arch=args.arch).cuda()
 
     def setup_prenetwork_ttt(self, **kwargs):
         args['ttt'] = TTT(args.nlayer, nz=args.latent, arch=args.arch).cuda()
@@ -159,7 +159,7 @@ class StyleGAN2TTTExperiment(TTTExperiment):
         return loss
     
     def train_prenetwork_w_ttt(self, **kwargs):
-        opt = get_optimizer(args.w_ttt)
+        opt = self.get_optimizer(args.w_ttt)
         for i in range(args.niter):
             opt.zero_grad()
             self.sample_n_stylegan_images_with_post_w_prenetwork_ttt()
