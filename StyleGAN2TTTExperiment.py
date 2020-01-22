@@ -11,9 +11,6 @@ from model import Generator, Discriminator
 from os.path import join
 from torch.autograd import Variable
 
-import torch
-torch.manual_seed(0)
-np.random.seed(0)
 
 args = None
 class StyleGAN2TTTExperiment(TTTExperiment):

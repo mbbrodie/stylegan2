@@ -4,6 +4,10 @@ from StyleGAN2TTTExperiment import StyleGAN2TTTExperiment
 import sys
 import os
 
+import torch
+torch.manual_seed(0)
+import numpy as np
+np.random.seed(0)
 
 def run(args):
     e = StyleGAN2TTTExperiment() 
@@ -100,8 +104,8 @@ for method in comparison_methods:
     #args.method = method
     # validated so far: 
     #   normal,
-    #args.method = 'coachz'
-    args.method = 'normal'
+    args.method = 'coachz'
+    #args.method = 'normal'
     args.savedir = join( args.path, args.base_exp_name,  args.method)
     if not os.path.exists(args.savedir):
         os.makedirs(args.savedir)
