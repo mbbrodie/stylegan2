@@ -80,7 +80,7 @@ import metrics
 
 #comparison methods
 args.truncation = 0.7
-args.lr =0.00001
+args.lr =0.0000001
 args.niter = 1000
 args.batch_size = 2
 args.n_eval_samples = 5000

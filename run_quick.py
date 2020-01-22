@@ -85,15 +85,15 @@ import metrics
 
 #comparison methods
 args.truncation = 0.7
-args.lr =0.00001
-args.niter = 1000
+args.lr =0.00000001
+args.niter = 1
 args.batch_size = 2
-args.n_eval_samples = 10
+args.n_eval_samples = 5 
 datasets = ['ffhq','cat','horse','church','car']
-args.dataset = 'cat'
+args.dataset = 'horse'
 args.path ='/content/results'
 
-args.base_exp_name='quicksamplescat'
+args.base_exp_name='quicksampleshorse'
 args.size = 1024 if args.dataset == 'ffhq' else 256
 args.checkpoint = 'stylegan2-%s-config-f.pt' % args.dataset
 from download import download_file_from_google_drive, gdrive_map
@@ -109,8 +109,7 @@ args.device = 'cuda'
 
 ## TESTING
 #methods = ['TTTz','TTTw','TNet']
-methods = ['TTTw','TNet']
-#TTTw isn't working right now
+methods = ['TTTw','TNet','TTTz']
 #methods = ['TTTw','TNet','TNet+TTT']
 #methods = ['TNet','TNet+TTT']
 #methods = ['TNet+TTT']

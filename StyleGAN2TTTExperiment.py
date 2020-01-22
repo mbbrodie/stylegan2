@@ -12,6 +12,7 @@ from model import Generator, Discriminator
 from os.path import join
 from torch.autograd import Variable
 
+"""
 import random
 seed = 0
 torch.manual_seed(seed)
@@ -22,6 +23,7 @@ random.seed(seed)  # Python random module.
 torch.manual_seed(seed)
 torch.backends.cudnn.benchmark = False
 torch.backends.cudnn.deterministic = True
+"""
 
 
 args = None

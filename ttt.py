@@ -212,12 +212,14 @@ def init_weights(m):
         #kaiming_normal_
         #torch.nn.init.xavier_uniform(m.weight)
         #torch.nn.init.kaiming_normal_(m.weight)
-        nn.init.normal_(m.weight, mean=0.0, std=0.00001)
+        nn.init.normal_(m.weight, mean=0.0, std=0.0000000001)
+        #nn.init.normal_(m.weight, mean=0.0, std=0.00001)
         #nn.init.normal_(m.weight, mean=0.0, std=0.001)
-        m.bias.data.fill_(0.00001)
+        m.bias.data.fill_(0.0000000001)
     if type(m) == nn.Conv2d:
         #nn.init.normal_(m.weight, mean=0.0, std=0.0000000001) # works for 2layer
-        nn.init.normal_(m.weight, mean=0.0, std=0.00001)
+        nn.init.normal_(m.weight, mean=0.0, std=0.0000000001)
+        #nn.init.normal_(m.weight, mean=0.0, std=0.00001)
         #m.bias.data.fill_(0.00001)
 """
 if __name__ == '__main__':
