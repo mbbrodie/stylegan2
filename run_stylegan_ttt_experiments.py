@@ -103,14 +103,26 @@ args.latent = 512
 args.n_mlp = 8
 args.device = 'cuda'
 
+#try setting random seeds here
+seed = 0
+torch.manual_seed(seed)
+torch.cuda.manual_seed(seed)
+torch.cuda.manual_seed_all(seed)  # if you are using multi-GPU.
+np.random.seed(seed)  # Numpy module.
+random.seed(seed)  # Python random module.
+torch.manual_seed(seed)
+torch.backends.cudnn.benchmark = False
+torch.backends.cudnn.deterministic = True
+
+
 comparison_methods = ['normal','coachz','coachw','ttz','ttw']
 for method in comparison_methods:
     print('method:',method)
     #args.method = method
     # validated so far: 
     #   normal,
-    #args.method = 'coachz'
-    args.method = 'normal'
+    args.method = 'coachz'
+    #args.method = 'normal'
     args.savedir = join( args.path, args.base_exp_name,  args.method)
     if not os.path.exists(args.savedir):
         os.makedirs(args.savedir)
