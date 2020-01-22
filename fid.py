@@ -23,10 +23,13 @@ def extract_feature_from_saved_samples(
     #for batch in tqdm(batch_sizes):
     #latent = torch.randn(batch, 512, device=device)
     #img, _ = g([latent], truncation=truncation, truncation_latent=truncation_latent)
+
+    
+    from pathlib import Path
+    path = Path(path)
     files = list(path.glob('*.jpg')) + list(path.glob('*.png'))
     for i in tqdm(range(n_batch)):
-        if verbose:
-            print('\rPropagating batch %d/%d' % (i + 1, n_batches), end='', flush=True)
+        #print('\rPropagating batch %d/%d' % (i + 1, n_batches), end='', flush=True)
         start = i * batch_size
         end = start + batch_size
 
@@ -100,7 +103,7 @@ if __name__ == '__main__':
     device = 'cuda'
 
     parser = argparse.ArgumentParser()
-    #python3 fid.py --n_sample 100 --batch 10 --size 299 --inception inception_ffhq.pkl --img_path /content/results/testing/TTTzprelu2 
+    #python3 fid.py --n_sample 100 --batch 10 --size 299 --inception inception_ffhq.pkl --img_path /content/results/testing/TTTzprelu2 nockpt
 
     parser.add_argument('--truncation', type=float, default=1)
     parser.add_argument('--truncation_mean', type=int, default=4096)
@@ -112,12 +115,15 @@ if __name__ == '__main__':
     parser.add_argument('--img_path', type=str, default='')
 
     args = parser.parse_args()
-    inception = nn.DataParallel(load_patched_inception_v3()).to(device)
+    #inception = nn.DataParallel(load_patched_inception_v3()).to(device)
+    #trying non data parallel to see if faster
+    inception = load_patched_inception_v3().to(device)
     inception.eval()
 
     if args.img_path != '':
         features = extract_feature_from_saved_samples(
-            args.img_path, inception, args.truncation, mean_latent, args.batch, args.n_sample, device
+            #args.img_path, inception, args.truncation, mean_latent, args.batch, args.n_sample, device
+            args.img_path, inception, args.batch, args.n_sample, device
         ).numpy()
     else:
         ckpt = torch.load(args.ckpt)
