@@ -119,7 +119,8 @@ for method in comparison_methods:
     #args.method = 'normal'
     #args.method = 'coachz' # looks different :( 
     #args.method = 'coachw' # works -- coachgan improvements as expected 
-    args.method = 'ttz'
+    #args.method = 'ttz'
+    args.method = 'ttw'
     args.savedir = join( args.path, args.base_exp_name,  args.method)
     if not os.path.exists(args.savedir):
         os.makedirs(args.savedir)

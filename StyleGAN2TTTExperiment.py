@@ -71,7 +71,8 @@ class StyleGAN2TTTExperiment(TTTExperiment):
             self.sample_z()
         args['w'] = args['g'].get_latent(args.z)
     
-        #return a + (b - a) * t
+    def lerp(self, a, b, t):
+        return a + (b - a) * t
 
     def set_np_random_state_with_seed(self,seed):
         args.state = np.random.RandomState(seed)
@@ -92,7 +93,7 @@ class StyleGAN2TTTExperiment(TTTExperiment):
 
     def sample_n_stylegan_images_with_w_ttl(self, **kwargs):
         self.sample_w()
-        self.trucate_w_with_lerp()
+        self.truncate_w_with_lerp()
         self.gen_from_w()
 
     def sample_n_stylegan_images_with_z_tt(self, **kwargs):
