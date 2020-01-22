@@ -33,6 +33,15 @@ class StyleGAN2TTTExperiment(TTTExperiment):
     def set_args(self, a):
         global args
         args = a
+    def calc_metrics(self):
+        #just call fid.py with img_path
+        if 'fid' in args.metrics:
+            print('FID: ')
+            print(metrics.fid(args))
+        if 'lpips' in args.metrics:
+            print('LPIPS: ')
+            print(metrics.fid(args))
+
     def gen_from_z(self):
         args.w = args['g'].get_latent(args.z)
         #args.fake, _ = args.g([args.z]) # determinism not working out this way
@@ -61,10 +70,11 @@ class StyleGAN2TTTExperiment(TTTExperiment):
             images = img.cpu()
             images = images.unsqueeze(0)
             images = torch.nn.functional.interpolate(images,size=(299,299))
-            save_image(images, join(args.savedir, str(i)+'.png'),normalize=True)
+            save_image(images, join(args.savedir, str(kwargs['num']+i)+'.png'),normalize=True)
     
     def sample_z(self, **kwargs):
-        sample_z = torch.randn(args.n_eval_samples, args.latent, device=args.device)
+        #sample_z = torch.randn(args.n_eval_samples, args.latent, device=args.device)
+        sample_z = torch.randn(args.batch_size, args.latent, device=args.device)
         args['z'] = sample_z
 
     def sample_w(self, **kwargs):
@@ -81,7 +91,7 @@ class StyleGAN2TTTExperiment(TTTExperiment):
     def truncate_z(self):
         # add existing scipy truncnorm code
         #args.z = truncnorm.rvs(-1*args.truncation, args.truncation, size=(args.n_eval_samples, args.latent), random_state=args.state).astype(np.float32)
-        args.z = truncnorm.rvs(-1*args.truncation, args.truncation, size=(args.n_eval_samples, args.latent)).astype(np.float32)
+        args.z = truncnorm.rvs(-1*args.truncation, args.truncation, size=(args.batch_size, args.latent)).astype(np.float32)
         args.z = torch.from_numpy(args.z).to('cuda')
         
     def truncate_w_with_lerp(self):

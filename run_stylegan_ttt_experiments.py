@@ -59,8 +59,8 @@ def run(args):
         if args.method == 'TNet+TTT':
             e.sample_n_stylegan_images_with_pre_and_intranetwork_ttt()
 
-        e.save_results()
-    #metrics.calc_metrics()
+        e.save_results(num=i*args.batch_size)
+    #e.calc_metrics()
 
 #parser = argparse.ArgumentParser()
 #parser.add_argument('--TT', action='store_true', help='use TT for z')
@@ -72,8 +72,6 @@ def run(args):
 from os.path import join
 import easydict
 args = easydict.EasyDict()
-args.n_eval_samples = 2
-args.path = '/content/stylegan2/results' #gdrive probably
 
 args.repo = './stylegan2'
 sys.path.append(args.repo)
@@ -86,9 +84,15 @@ tflib.init_tf()
 import metrics
 
 #comparison methods
+args.truncation = 0.7
+args.lr =0.001
+args.niter = 100#0
+args.batch_size = 2
+args.n_eval_samples = 50#00
 datasets = ['ffhq','cat','horse','church','car']
 args.dataset = 'church'
-args.path ='/content/stylegan2/results'
+args.path ='/content/results'
+
 args.base_exp_name='testing'
 args.size = 1024 if args.dataset == 'ffhq' else 256
 args.checkpoint = 'stylegan2-%s-config-f.pt' % args.dataset
@@ -96,9 +100,6 @@ args.channel_multiplier = 2
 args.latent = 512
 args.n_mlp = 8
 args.device = 'cuda'
-args.truncation = 0.7
-args.lr =0.001
-args.niter = 5
 
 #try setting random seeds here
 seed = 0
@@ -114,8 +115,8 @@ torch.backends.cudnn.deterministic = True
 ## TESTING
 args.nlayer = 2
 args.arch = 'a'
-args.method = 'TNet+TTT'
-for arch in 'abcdef':
+args.method = 'TTTz'
+for arch in ['prelu']:
     seed = 0
     torch.manual_seed(seed)
     torch.cuda.manual_seed(seed)
