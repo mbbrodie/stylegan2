@@ -33,6 +33,7 @@ class PDIP(nn.Module):
         return x
 
 def make_pdip_block(insize,arch,last=False):
+    print('here is arch',arch)
     if arch == 'a' :#a\item BPF + x
         return nn.Sequential(
                 nn.BatchNorm2d(insize),

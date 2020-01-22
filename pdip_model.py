@@ -9,6 +9,7 @@ from torch.nn import functional as F
 from torch.autograd import Function
 
 from op import FusedLeakyReLU, fused_leaky_relu, upfirdn2d
+from pdip import make_pdip_block
 
 import random
 import numpy as np
@@ -207,7 +208,6 @@ class ModulatedConv2d(nn.Module):
         self.out_channel = out_channel
         self.upsample = upsample
         self.downsample = downsample
-        self.nlayer = nlayer
 
         if upsample:
             factor = 2
@@ -383,13 +383,15 @@ class Generator(nn.Module):
         blur_kernel=[1, 3, 3, 1],
         lr_mlp=0.01,
         #TNET attempt
-        use_ttt=False,
+        use_ttt=True,
         arch='prelu',
         nlayer=2,
     ):
         super().__init__()
 
         self.use_ttt = use_ttt
+        self.nlayer = nlayer
+        self.arch = arch
         self.size = size
 
         self.style_dim = style_dim
@@ -459,9 +461,10 @@ class Generator(nn.Module):
                 )
             )
 
-            net = nn.Sequential()
+            net = nn.ModuleList()
             for n in range(self.nlayer):
-                net.add_module(str(n), make_pdip_block(out_channel,arch))
+                block = make_pdip_block(out_channel,self.arch)
+                net.append(block)
             self.ttts.append(net)
 
             self.to_rgbs.append(ToRGB(out_channel, style_dim))
@@ -545,13 +548,16 @@ class Generator(nn.Module):
         skip = self.to_rgb1(out, latent[:, 1])
 
         i = 1
-        for conv1, conv2, ttt1, ttt2, noise1, noise2, to_rgb in zip(
-                self.convs[::2], self.convs[1::2], self.ttts[::2], self.ttts[1::2] noise[1::2], noise[2::2], self.to_rgbs
+        for conv1, conv2,  noise1, noise2, to_rgb in zip(
+                self.convs[::2], self.convs[1::2], noise[1::2], noise[2::2], self.to_rgbs
         ):
             out = conv1(out, latent[:, i], noise=noise1)
-            out = ttt1(out) + out
             out = conv2(out, latent[:, i + 1], noise=noise2)
-            out = ttt2(out) + out
+            res = out
+            for t in self.ttts[i]:
+                out = t(out) #+ out
+            out = out + res
+            #out = ttt2(out) + out
             #if self.use_ttt:
             #    out = self.ttt(out) + out
             skip = to_rgb(out, latent[:, i + 2], skip)
@@ -565,7 +571,6 @@ class Generator(nn.Module):
 
         else:
             return image, None
-
 
 class ConvLayer(nn.Sequential):
     def __init__(

@@ -98,7 +98,7 @@ args.n_mlp = 8
 args.device = 'cuda'
 args.truncation = 0.7
 args.lr =0.001
-args.niter = 100
+args.niter = 5
 
 #try setting random seeds here
 seed = 0
@@ -114,8 +114,8 @@ torch.backends.cudnn.deterministic = True
 ## TESTING
 args.nlayer = 2
 args.arch = 'a'
-args.method = 'TTTw'
-for arch in 'bcdef':
+args.method = 'TNet'
+for arch in ['prelu']:
     seed = 0
     torch.manual_seed(seed)
     torch.cuda.manual_seed(seed)

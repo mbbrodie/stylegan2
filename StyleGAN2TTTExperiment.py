@@ -4,6 +4,7 @@ import easydict
 import numpy as np
 from scipy.stats import truncnorm
 from torch.nn import functional as F
+import torch.nn as nn
 from torchvision.utils import save_image
 from ttt import TTT
 from pdip import PDIP # do for generator.features
@@ -139,7 +140,7 @@ class StyleGAN2TTTExperiment(TTTExperiment):
     def w_ttt(self):
         args.w = args.w_ttt( args.w )
 
-    def init_weights(m):
+    def init_weights(self,m):
         if type(m) == nn.Linear:
             nn.init.normal_(m.weight, mean=0.0, std=0.00001)
             m.bias.data.fill_(0.00001)
@@ -148,21 +149,25 @@ class StyleGAN2TTTExperiment(TTTExperiment):
     
     def setup_prenetwork_w_ttt(self, **kwargs):
         ttt = TTT(args.nlayer, nz=args.latent, arch=args.arch)
-        ttt.apply(init_weights)
+        ttt.apply(self.init_weights)
         args['w_ttt'] = ttt.cuda()
 
     def setup_prenetwork_ttt(self, **kwargs):
         #add weight init!
         ttt = TTT(args.nlayer, nz=args.latent, arch=args.arch)
-        ttt.apply(init_weights)
+        ttt.apply(self.init_weights)
         args['ttt'] = ttt.cuda()
     
     def setup_intranetwork_ttt(self, **kwargs):
-        fron pdip_model import Generator as PG
+        from pdip_model import Generator as PG
+        checkpoint = torch.load(args.checkpoint)
         g_ema = PG(
-            args.size, args.latent, args.n_mlp, channel_multiplier=args.channel_multiplier
+            args.size, args.latent, args.n_mlp, channel_multiplier=args.channel_multiplier,
+            use_ttt=True,
+            arch=args.arch,
+            nlayer=args.nlayer
         ).to(args.device)
-        g_ema.apply(init_weights)
+        g_ema.apply(self.init_weights)
         g_ema.load_state_dict(checkpoint['g_ema'],strict=False)
         args['g'] = g_ema
         print('check pdip code -- you probably need to reload G')
@@ -196,7 +201,7 @@ class StyleGAN2TTTExperiment(TTTExperiment):
             opt.step()
     
     def train_intranetwork_ttt(self, **kwargs):
-        opt = self.get_optimizer(args.g.noise)
+        opt = self.get_optimizer(args.g.ttts)
         for i in range(args.niter):
             opt.zero_grad()
             self.sample_n_stylegan_images_with_intranetwork_ttt()
