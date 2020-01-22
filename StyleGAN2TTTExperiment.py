@@ -138,16 +138,35 @@ class StyleGAN2TTTExperiment(TTTExperiment):
         args.z = args.ttt( args.z )
     def w_ttt(self):
         args.w = args.w_ttt( args.w )
+
+    def init_weights(m):
+        if type(m) == nn.Linear:
+            nn.init.normal_(m.weight, mean=0.0, std=0.00001)
+            m.bias.data.fill_(0.00001)
+        elif type(m) == nn.Conv2d:
+            nn.init.normal_(m.weight, mean=0.0, std=0.00001)
     
     def setup_prenetwork_w_ttt(self, **kwargs):
-        args['w_ttt'] = TTT(args.nlayer, nz=args.latent, arch=args.arch).cuda()
+        ttt = TTT(args.nlayer, nz=args.latent, arch=args.arch)
+        ttt.apply(init_weights)
+        args['w_ttt'] = ttt.cuda()
 
     def setup_prenetwork_ttt(self, **kwargs):
-        args['ttt'] = TTT(args.nlayer, nz=args.latent, arch=args.arch).cuda()
+        #add weight init!
+        ttt = TTT(args.nlayer, nz=args.latent, arch=args.arch)
+        ttt.apply(init_weights)
+        args['ttt'] = ttt.cuda()
     
     def setup_intranetwork_ttt(self, **kwargs):
+        fron pdip_model import Generator as PG
+        g_ema = PG(
+            args.size, args.latent, args.n_mlp, channel_multiplier=args.channel_multiplier
+        ).to(args.device)
+        g_ema.apply(init_weights)
+        g_ema.load_state_dict(checkpoint['g_ema'],strict=False)
+        args['g'] = g_ema
         print('check pdip code -- you probably need to reload G')
-        args['g'] = PDIP(model=args.g,arch=args.arch, nlayers=args.nlayer, size=(1, args.latent),device='cuda').cuda()
+        #args['g'] = PDIP(model=args.g,arch=args.arch, nlayers=args.nlayer, size=(1, args.latent),device='cuda').cuda()
     
     ## OPTIMIZER SETUP ##
     def get_optimizer(self, net):
