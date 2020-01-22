@@ -86,14 +86,14 @@ import metrics
 #comparison methods
 args.truncation = 0.7
 args.lr =0.001
-args.niter = 100#0
+args.niter = 50#100#0
 args.batch_size = 2
-args.n_eval_samples = 50#00
+args.n_eval_samples = 10#00
 datasets = ['ffhq','cat','horse','church','car']
 args.dataset = 'church'
 args.path ='/content/results'
 
-args.base_exp_name='testing'
+args.base_exp_name='testing50_iter_lr_001'
 args.size = 1024 if args.dataset == 'ffhq' else 256
 args.checkpoint = 'stylegan2-%s-config-f.pt' % args.dataset
 args.channel_multiplier = 2
@@ -101,22 +101,12 @@ args.latent = 512
 args.n_mlp = 8
 args.device = 'cuda'
 
-#try setting random seeds here
-seed = 0
-torch.manual_seed(seed)
-torch.cuda.manual_seed(seed)
-torch.cuda.manual_seed_all(seed)  # if you are using multi-GPU.
-np.random.seed(seed)  # Numpy module.
-random.seed(seed)  # Python random module.
-torch.manual_seed(seed)
-torch.backends.cudnn.benchmark = False
-torch.backends.cudnn.deterministic = True
-
 ## TESTING
-for method in 
-methods = ['TTTz','TTTw','TNet','TNet+TTT']
-layers = [2,4,8,16,32,64,128,256]
+#methods = ['TTTz','TTTw','TNet','TNet+TTT']
+#TTTw isn't working right now
+methods = ['TTTw','TNet','TNet+TTT']
 architectures = ['prelu','a','b','c','d','e','f']
+layers = [2,4,8,16,32,64,128,256]
 for m in methods:
     for arch in architectures:
         for nl in layers:
@@ -124,6 +114,31 @@ for m in methods:
             args.arch = arch
             args.method = m
 
+            seed = 0
+            torch.manual_seed(seed)
+            torch.cuda.manual_seed(seed)
+            torch.cuda.manual_seed_all(seed)  # if you are using multi-GPU.
+            np.random.seed(seed)  # Numpy module.
+            random.seed(seed)  # Python random module.
+            torch.manual_seed(seed)
+            torch.backends.cudnn.benchmark = False
+            torch.backends.cudnn.deterministic = True
+            ##
+            args.arch = arch
+            print(arch)
+            if args.method in ['TTTz','TTTw','TNet','TNet+TTT']:
+                args.savedir = join( args.path, args.base_exp_name,  args.method+args.arch+str(args.nlayer))
+            else:
+                args.savedir = join( args.path, args.base_exp_name,  args.method)
+            if not os.path.exists(args.savedir):
+                os.makedirs(args.savedir)
+            run(args)
+
+#NOTE: All comparison methods work
+#   coachz and ttz give different lookin images (as expected)
+comparison_methods = ['normal','coachz','coachw','ttz','ttw']
+for method in comparison_methods:
+    print('method:',method)
     seed = 0
     torch.manual_seed(seed)
     torch.cuda.manual_seed(seed)
@@ -133,23 +148,6 @@ for m in methods:
     torch.manual_seed(seed)
     torch.backends.cudnn.benchmark = False
     torch.backends.cudnn.deterministic = True
-    ##
-    args.arch = arch
-    print(arch)
-    if args.method in ['TTTz','TTTw','TNet','TNet+TTT']:
-        args.savedir = join( args.path, args.base_exp_name,  args.method+args.arch+str(args.nlayer))
-    else:
-        args.savedir = join( args.path, args.base_exp_name,  args.method)
-    if not os.path.exists(args.savedir):
-        os.makedirs(args.savedir)
-    run(args)
-exit()
-
-#NOTE: All comparison methods work
-#   coachz and ttz give different lookin images (as expected)
-comparison_methods = ['normal','coachz','coachw','ttz','ttw']
-for method in comparison_methods:
-    print('method:',method)
     args.method = method
     args.savedir = join( args.path, args.base_exp_name,  args.method)
     if not os.path.exists(args.savedir):
@@ -157,6 +155,7 @@ for method in comparison_methods:
     run(args)
 
 
+exit()
 
 ## SAMPLE
 #a\item BPF + x
@@ -167,11 +166,3 @@ for method in comparison_methods:
 #f\item FBP-F_${bottleneck}$BP-FB + 
 #our methods
 #if args.train ==> train then sample
-for nl in nlayer:
-    args.nlayer = nl
-    for arch in architectures:
-        args.arch = arch
-        for method in methods:
-            args.method = method
-            args.savedir = join( args.base_exp_name,  method)
-            run(args)
