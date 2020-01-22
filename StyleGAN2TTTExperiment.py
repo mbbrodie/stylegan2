@@ -78,7 +78,9 @@ class StyleGAN2TTTExperiment(TTTExperiment):
 
     def truncate_z(self):
         # add existing scipy truncnorm code
-        args.z = truncnorm.rvs(-1*args.truncation, args.truncation, size=(args.batch_size, args.dim_z), random_state=args.state).astype(np.float32)
+        #args.z = truncnorm.rvs(-1*args.truncation, args.truncation, size=(args.n_eval_samples, args.latent), random_state=args.state).astype(np.float32)
+        args.z = truncnorm.rvs(-1*args.truncation, args.truncation, size=(args.n_eval_samples, args.latent)).astype(np.float32)
+        args.z = torch.from_numpy(args.z).to('cuda')
         
     def truncate_w_with_lerp(self):
         mean_w = args.g.mean_latent(args.w.size(0))

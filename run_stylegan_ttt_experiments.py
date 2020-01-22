@@ -96,6 +96,7 @@ args.channel_multiplier = 2
 args.latent = 512
 args.n_mlp = 8
 args.device = 'cuda'
+args.truncation = 0.7
 
 #try setting random seeds here
 seed = 0
@@ -115,9 +116,10 @@ for method in comparison_methods:
     #args.method = method
     # validated so far: 
     #   normal,
-    #args.method = 'coachz' # looks different :( 
-    args.method = 'coachw' # looks different :( 
     #args.method = 'normal'
+    #args.method = 'coachz' # looks different :( 
+    #args.method = 'coachw' # works -- coachgan improvements as expected 
+    args.method = 'ttz'
     args.savedir = join( args.path, args.base_exp_name,  args.method)
     if not os.path.exists(args.savedir):
         os.makedirs(args.savedir)
