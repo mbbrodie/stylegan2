@@ -147,7 +147,7 @@ class StyleGAN2TTTExperiment(TTTExperiment):
     
     def setup_intranetwork_ttt(self, **kwargs):
         print('check pdip code -- you probably need to reload G')
-        args['g'] = PDIP(model=g.features,arch=args.arch,nlayers=args.nlayer, size=args.w.size()).cuda()
+        args['g'] = PDIP(model=args.g,arch=args.arch, nlayers=args.nlayer, size=(1, args.latent),device='cuda').cuda()
     
     ## OPTIMIZER SETUP ##
     def get_optimizer(self, net):
