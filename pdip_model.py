@@ -198,10 +198,6 @@ class ModulatedConv2d(nn.Module):
         upsample=False,
         downsample=False,
         blur_kernel=[1, 3, 3, 1],
-        #TNET attempt
-        use_ttt=False,
-        arch='prelu',
-        nlayer=2,
     ):
         super().__init__()
 
@@ -211,7 +207,6 @@ class ModulatedConv2d(nn.Module):
         self.out_channel = out_channel
         self.upsample = upsample
         self.downsample = downsample
-        self.use_ttt = use_ttt
         self.nlayer = nlayer
 
         if upsample:
@@ -241,11 +236,6 @@ class ModulatedConv2d(nn.Module):
         self.modulation = EqualLinear(style_dim, in_channel, bias_init=1)
 
         self.demodulate = demodulate
-        if self.use_ttt:
-            net = nn.Sequential()
-            for n in range(self.nlayer):
-                net.add_module(str(n), make_pdip_block(out_channel,arch))
-            self.ttt = nn.ModuleList(self.noise)
 
     def __repr__(self):
         return (
@@ -294,8 +284,6 @@ class ModulatedConv2d(nn.Module):
             _, _, height, width = out.shape
             out = out.view(batch, self.out_channel, height, width)
 
-        if self.use_ttt:
-            out = self.ttt(out) + out
         return out
 
 
@@ -394,9 +382,14 @@ class Generator(nn.Module):
         channel_multiplier=2,
         blur_kernel=[1, 3, 3, 1],
         lr_mlp=0.01,
+        #TNET attempt
+        use_ttt=False,
+        arch='prelu',
+        nlayer=2,
     ):
         super().__init__()
 
+        self.use_ttt = use_ttt
         self.size = size
 
         self.style_dim = style_dim
@@ -437,6 +430,7 @@ class Generator(nn.Module):
         self.upsamples = nn.ModuleList()
         self.to_rgbs = nn.ModuleList()
         self.noises = nn.Module()
+        self.ttts = nn.ModuleList()
 
         in_channel = self.channels[4]
 
@@ -464,6 +458,11 @@ class Generator(nn.Module):
                     out_channel, out_channel, 3, style_dim, blur_kernel=blur_kernel
                 )
             )
+
+            net = nn.Sequential()
+            for n in range(self.nlayer):
+                net.add_module(str(n), make_pdip_block(out_channel,arch))
+            self.ttts.append(net)
 
             self.to_rgbs.append(ToRGB(out_channel, style_dim))
 
@@ -546,11 +545,15 @@ class Generator(nn.Module):
         skip = self.to_rgb1(out, latent[:, 1])
 
         i = 1
-        for conv1, conv2, noise1, noise2, to_rgb in zip(
-            self.convs[::2], self.convs[1::2], noise[1::2], noise[2::2], self.to_rgbs
+        for conv1, conv2, ttt1, ttt2, noise1, noise2, to_rgb in zip(
+                self.convs[::2], self.convs[1::2], self.ttts[::2], self.ttts[1::2] noise[1::2], noise[2::2], self.to_rgbs
         ):
             out = conv1(out, latent[:, i], noise=noise1)
+            out = ttt1(out) + out
             out = conv2(out, latent[:, i + 1], noise=noise2)
+            out = ttt2(out) + out
+            #if self.use_ttt:
+            #    out = self.ttt(out) + out
             skip = to_rgb(out, latent[:, i + 2], skip)
 
             i += 2
