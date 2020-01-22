@@ -10,7 +10,7 @@ import random
 
 def run(args):
     e = StyleGAN2TTTExperiment() 
-    #print(args)
+    print(args)
     e.set_args(args)
     e.setup()
     ## SETUP
@@ -115,16 +115,10 @@ torch.backends.cudnn.deterministic = True
 args.nlayer = 2
 args.arch = 'a'
 args.method = 'TTTz'
-for arch in 'bcdef':
-    args.arch = arch
-    print(arch)
-    if args.method in ['TTTz','TTTw','TNet','TNet+TTT']:
-        args.savedir = join( args.path, args.base_exp_name,  args.method+args.arch+str(args.nlayer))
-    else:
-        args.savedir = join( args.path, args.base_exp_name,  args.method)
-    if not os.path.exists(args.savedir):
-        os.makedirs(args.savedir)
-    run(args)
+args.savedir = join( args.path, args.base_exp_name,  args.method)
+if not os.path.exists(args.savedir):
+    os.makedirs(args.savedir)
+run(args)
 exit()
 
 #NOTE: All comparison methods work

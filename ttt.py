@@ -124,10 +124,10 @@ def make_block(insize,arch,last=False):
 
                 nn.BatchNorm1d(insize),
                 nn.PReLU(),
-                nn.Linear(insize,insize/2),
+                nn.Linear(insize,insize//2),
 
-                nn.BatchNorm1d(insize/2),
-                nn.Linear(insize/2,insize),
+                nn.BatchNorm1d(insize//2),
+                nn.Linear(insize//2,insize),
                 )
     elif arch =='d': #d\item FBP + x
         return nn.Sequential(
@@ -150,11 +150,11 @@ def make_block(insize,arch,last=False):
                 nn.BatchNorm1d(insize),
                 nn.PReLU(),
 
-                nn.Linear(insize,insize/2),
-                nn.BatchNorm1d(insize/2),
+                nn.Linear(insize,insize//2),
+                nn.BatchNorm1d(insize//2),
                 nn.PReLU(),
 
-                nn.Linear(insize/2,insize),
+                nn.Linear(insize//2,insize),
                 nn.BatchNorm1d(insize),
                 )
     elif arch == 'linear'  or last:
