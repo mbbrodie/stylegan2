@@ -170,7 +170,6 @@ class StyleGAN2TTTExperiment(TTTExperiment):
         g_ema.apply(self.init_weights)
         g_ema.load_state_dict(checkpoint['g_ema'],strict=False)
         args['g'] = g_ema
-        print('check pdip code -- you probably need to reload G')
         #args['g'] = PDIP(model=args.g,arch=args.arch, nlayers=args.nlayer, size=(1, args.latent),device='cuda').cuda()
     
     ## OPTIMIZER SETUP ##
@@ -211,7 +210,7 @@ class StyleGAN2TTTExperiment(TTTExperiment):
 
     #NOTE: this is z TTT right now. could adapt for w TTT if that performs well
     def train_prenetwork_and_intranetwork_ttt(self, **kwargs):
-        opt = torch.optim.Adam(list(args.ttt.parameters() + args.w_ttt.parameters()), lr=args.lr)
+        opt = torch.optim.Adam(list(args.ttt.parameters()) + list(args.w_ttt.parameters())+list(args.g.ttts.parameters()), lr=args.lr)
         for i in range(args.niter):
             opt.zero_grad()
             self.sample_n_stylegan_images_with_pre_and_intranetwork_ttt()

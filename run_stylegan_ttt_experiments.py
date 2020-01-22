@@ -72,7 +72,7 @@ def run(args):
 from os.path import join
 import easydict
 args = easydict.EasyDict()
-args.n_eval_samples = 1
+args.n_eval_samples = 2
 args.path = '/content/stylegan2/results' #gdrive probably
 
 args.repo = './stylegan2'
@@ -87,7 +87,7 @@ import metrics
 
 #comparison methods
 datasets = ['ffhq','cat','horse','church','car']
-args.dataset = 'ffhq'
+args.dataset = 'church'
 args.path ='/content/stylegan2/results'
 args.base_exp_name='testing'
 args.size = 1024 if args.dataset == 'ffhq' else 256
@@ -114,8 +114,8 @@ torch.backends.cudnn.deterministic = True
 ## TESTING
 args.nlayer = 2
 args.arch = 'a'
-args.method = 'TNet'
-for arch in 'cdef':
+args.method = 'TNet+TTT'
+for arch in 'abcdef':
     seed = 0
     torch.manual_seed(seed)
     torch.cuda.manual_seed(seed)

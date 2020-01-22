@@ -1,5 +1,11 @@
+c:notes
+  n:batch-prelu-conv does MUCH better than conv-batch-prelu with short training
+    q:what about after longer training?
+  n:architectures d and f with TNet take too much memory. batch-size 1 works for TNet, but not TNet+TTT
+
 c:stylegan
 # if this works--just do 5 datasets out of stylegan.
+
 
     c:todo
         c:set random seed
