@@ -140,13 +140,14 @@ class StyleGAN2TTTExperiment(TTTExperiment):
         args.w = args.wttt( args.w )
     
     def setup_prenetwork_w_ttt(self, **kwargs):
-        args['wttt'] = TTT(args.nlayer, nz=args.z.size(1),arch=args.arch)
+        args['wttt'] = TTT(args.nlayer, nz=args.latent, arch=args.arch).cuda()
 
     def setup_prenetwork_ttt(self, **kwargs):
-        args['ttt'] = TTT(args.nlayer, nz=args.z.size(1),arch=args.arch)
+        args['ttt'] = TTT(args.nlayer, nz=args.latent, arch=args.arch).cuda()
     
     def setup_intranetwork_ttt(self, **kwargs):
-        args['g'] = PDIP(model=g.features,arch=args.arch,nlayers=args.nlayer, size=args.w.size())
+        print('check pdip code -- you probably need to reload G')
+        args['g'] = PDIP(model=g.features,arch=args.arch,nlayers=args.nlayer, size=args.w.size()).cuda()
     
     ## OPTIMIZER SETUP ##
     def get_optimizer(self, net):
@@ -167,7 +168,7 @@ class StyleGAN2TTTExperiment(TTTExperiment):
             opt.step()
 
     def train_prenetwork_ttt(self, **kwargs):
-        opt = get_optimizer(args.ttt)
+        opt = self.get_optimizer(args.ttt)
         for i in range(args.niter):
             opt.zero_grad()
             self.sample_n_stylegan_images_with_prenetwork_ttt()
@@ -176,7 +177,7 @@ class StyleGAN2TTTExperiment(TTTExperiment):
             opt.step()
     
     def train_intranetwork_ttt(self, **kwargs):
-        opt = get_optimizer(args.g.noise)
+        opt = self.get_optimizer(args.g.noise)
         for i in range(args.niter):
             opt.zero_grad()
             self.sample_n_stylegan_images_with_intranetwork_ttt()

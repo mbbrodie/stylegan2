@@ -97,6 +97,8 @@ args.latent = 512
 args.n_mlp = 8
 args.device = 'cuda'
 args.truncation = 0.7
+args.lr =0.001
+args.niter = 10
 
 #try setting random seeds here
 seed = 0
@@ -109,31 +111,31 @@ torch.manual_seed(seed)
 torch.backends.cudnn.benchmark = False
 torch.backends.cudnn.deterministic = True
 
+## TESTING
+args.nlayer = 2
+args.arch = 'prelu'
+args.method = 'TTTz'
+args.savedir = join( args.path, args.base_exp_name,  args.method)
+if not os.path.exists(args.savedir):
+    os.makedirs(args.savedir)
+run(args)
+exit()
 
+#NOTE: All comparison methods work
+#   coachz and ttz give different lookin images (as expected)
 comparison_methods = ['normal','coachz','coachw','ttz','ttw']
 for method in comparison_methods:
     print('method:',method)
-    #args.method = method
-    # validated so far: 
-    #   normal,
-    #args.method = 'normal'
-    #args.method = 'coachz' # looks different :( 
-    #args.method = 'coachw' # works -- coachgan improvements as expected 
-    #args.method = 'ttz'
-    args.method = 'ttw'
+    args.method = method
     args.savedir = join( args.path, args.base_exp_name,  args.method)
     if not os.path.exists(args.savedir):
         os.makedirs(args.savedir)
     run(args)
-    exit() #TEMPORARY
+
+
 
 ## SAMPLE
 experiments= [
-        'normal',
-        'coachz',
-        'coachw',
-        'ttz',
-        'ttw',
         'TTTz',
         'TTTw',
         'TNet',
