@@ -115,7 +115,8 @@ for method in comparison_methods:
     #args.method = method
     # validated so far: 
     #   normal,
-    args.method = 'coachz'
+    #args.method = 'coachz' # looks different :( 
+    args.method = 'coachw' # looks different :( 
     #args.method = 'normal'
     args.savedir = join( args.path, args.base_exp_name,  args.method)
     if not os.path.exists(args.savedir):

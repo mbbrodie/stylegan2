@@ -197,7 +197,7 @@ class StyleGAN2TTTExperiment(TTTExperiment):
     def coach_z(self, **kwargs):
         args.z = Variable(args.z, requires_grad=True)
         opt = torch.optim.Adam([args.z], lr=0.01)
-        for j in range(1):
+        for j in range(5):
             self.gen_from_z()
             g_loss = self.g_nonsaturating_loss()
             g_loss.backward()
@@ -205,8 +205,8 @@ class StyleGAN2TTTExperiment(TTTExperiment):
 
     def coach_w(self, **kwargs):
         args.w = Variable(args.w, requires_grad=True)
-        opt = torch.optim.Adam([w], lr=0.01)
-        for j in range(10):
+        opt = torch.optim.Adam([args.w], lr=0.01)
+        for j in range(5):
             self.gen_from_w()
             g_loss = self.g_nonsaturating_loss()
             g_loss.backward()
