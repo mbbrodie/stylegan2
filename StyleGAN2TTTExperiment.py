@@ -80,8 +80,8 @@ class StyleGAN2TTTExperiment(TTTExperiment):
         args['z'] = sample_z
 
     def sample_w(self, **kwargs):
-        if 'z' not in args.keys():
-            self.sample_z()
+        #if 'z' not in args.keys():
+        #    self.sample_z()
         args['w'] = args['g'].get_latent(args.z)
     
     def lerp(self, a, b, t):
@@ -101,10 +101,12 @@ class StyleGAN2TTTExperiment(TTTExperiment):
         args['w'] = self.lerp(mean_w, args.w, args.truncation)
 
     def sample_n_stylegan_images_without_tt(self, **kwargs):
+        self.sample_z()
         self.sample_w()
         self.gen_from_w()
 
     def sample_n_stylegan_images_with_w_ttl(self, **kwargs):
+        self.sample_z()
         self.sample_w()
         self.truncate_w_with_lerp()
         self.gen_from_w()
@@ -121,11 +123,13 @@ class StyleGAN2TTTExperiment(TTTExperiment):
         self.gen_from_z()
     
     def sample_n_stylegan_images_with_w_coachgan(self, **kwargs):
+        self.sample_z()
         self.sample_w()
         self.coach_w()
         self.gen_from_w()
 
     def sample_n_stylegan_images_with_post_w_prenetwork_ttt(self, **kwargs):
+        self.sample_z()
         self.sample_w()
         self.w_ttt()
         self.gen_from_w()
@@ -137,6 +141,7 @@ class StyleGAN2TTTExperiment(TTTExperiment):
     
     def sample_n_stylegan_images_with_intranetwork_ttt(self, **kwargs):
         #same as normal sample
+        self.sample_z()
         self.sample_w()
         self.gen_from_w()
     
@@ -154,10 +159,10 @@ class StyleGAN2TTTExperiment(TTTExperiment):
 
     def init_weights(self,m):
         if type(m) == nn.Linear:
-            nn.init.normal_(m.weight, mean=0.0, std=0.00001)
-            m.bias.data.fill_(0.00001)
+            nn.init.normal_(m.weight, mean=0.0, std=0.000000001)
+            m.bias.data.fill_(0.000000001)
         elif type(m) == nn.Conv2d:
-            nn.init.normal_(m.weight, mean=0.0, std=0.00001)
+            nn.init.normal_(m.weight, mean=0.0, std=0.000000001)
     
     def setup_prenetwork_w_ttt(self, **kwargs):
         ttt = TTT(args.nlayer, nz=args.latent, arch=args.arch)

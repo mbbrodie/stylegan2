@@ -85,8 +85,8 @@ import metrics
 
 #comparison methods
 args.truncation = 0.7
-args.lr =0.00000001
-args.niter = 1
+args.lr =0.000000001
+args.niter = 100
 args.batch_size = 2
 args.n_eval_samples = 5 
 datasets = ['ffhq','cat','horse','church','car']
