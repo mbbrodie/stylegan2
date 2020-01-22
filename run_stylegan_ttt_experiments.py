@@ -85,15 +85,15 @@ import metrics
 
 #comparison methods
 args.truncation = 0.7
-args.lr =0.001
-args.niter = 50#100#0
+args.lr =0.00001
+args.niter = 1000
 args.batch_size = 2
-args.n_eval_samples = 10#00
+args.n_eval_samples = 5000
 datasets = ['ffhq','cat','horse','church','car']
 args.dataset = 'church'
 args.path ='/content/results'
 
-args.base_exp_name='testing50_iter_lr_001'
+args.base_exp_name='testing1000_iter_lr_00001'
 args.size = 1024 if args.dataset == 'ffhq' else 256
 args.checkpoint = 'stylegan2-%s-config-f.pt' % args.dataset
 args.channel_multiplier = 2
@@ -102,12 +102,20 @@ args.n_mlp = 8
 args.device = 'cuda'
 
 ## TESTING
-#methods = ['TTTz','TTTw','TNet','TNet+TTT']
+methods = ['TTTz','TTTw','TNet','TNet+TTT']
 #TTTw isn't working right now
-methods = ['TTTw','TNet','TNet+TTT']
+#methods = ['TTTw','TNet','TNet+TTT']
+#methods = ['TNet','TNet+TTT']
+#methods = ['TNet+TTT']
 architectures = ['prelu','a','b','c','d','e','f']
-layers = [2,4,8,16,32,64,128,256]
+#architectures = ['c','d','e','f']
+#architectures = ['d','e','f']
+layers = [2,4]#,8]#,16]#,32,64,128,256]
 for m in methods:
+    if m in ['TTTz','TTTw']:
+        layers = [2,4,8,16,32]
+    else:
+        layers = [2,4]
     for arch in architectures:
         for nl in layers:
             args.nlayer = nl
@@ -125,11 +133,11 @@ for m in methods:
             torch.backends.cudnn.deterministic = True
             ##
             args.arch = arch
-            print(arch)
             if args.method in ['TTTz','TTTw','TNet','TNet+TTT']:
                 args.savedir = join( args.path, args.base_exp_name,  args.method+args.arch+str(args.nlayer))
             else:
                 args.savedir = join( args.path, args.base_exp_name,  args.method)
+            print(args.savedir)
             if not os.path.exists(args.savedir):
                 os.makedirs(args.savedir)
             run(args)
