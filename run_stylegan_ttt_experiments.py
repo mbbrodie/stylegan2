@@ -8,12 +8,6 @@ import torch
 import numpy as np
 import random
 
-torch.manual_seed(42)
-torch.cuda.manual_seed(42)
-np.random.seed(42)
-random.seed(42)
-torch.backends.cudnn.deterministic = True
-
 def run(args):
     e = StyleGAN2TTTExperiment() 
     print(args)
@@ -121,8 +115,8 @@ for method in comparison_methods:
     #args.method = method
     # validated so far: 
     #   normal,
-    args.method = 'coachz'
-    #args.method = 'normal'
+    #args.method = 'coachz'
+    args.method = 'normal'
     args.savedir = join( args.path, args.base_exp_name,  args.method)
     if not os.path.exists(args.savedir):
         os.makedirs(args.savedir)

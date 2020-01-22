@@ -10,6 +10,17 @@ from torch.autograd import Function
 
 from op import FusedLeakyReLU, fused_leaky_relu, upfirdn2d
 
+import random
+import numpy as np
+seed = 0
+torch.manual_seed(seed)
+torch.cuda.manual_seed(seed)
+torch.cuda.manual_seed_all(seed)  # if you are using multi-GPU.
+np.random.seed(seed)  # Numpy module.
+random.seed(seed)  # Python random module.
+torch.manual_seed(seed)
+torch.backends.cudnn.benchmark = False
+torch.backends.cudnn.deterministic = True
 
 class PixelNorm(nn.Module):
     def __init__(self):
