@@ -9,6 +9,7 @@ from ttt import TTT
 from pdip import PDIP # do for generator.features
 from model import Generator, Discriminator
 from os.path import join
+from torch.autograd import Variable
 
 args = None
 class StyleGAN2TTTExperiment(TTTExperiment):
@@ -134,19 +135,17 @@ class StyleGAN2TTTExperiment(TTTExperiment):
     def get_optimizer(self, net):
         return torch.optim.Adam(net.parameters(), lr=args.lr)
 
-    def g_nonsaturating_loss(self, fake_pred):
+    def g_nonsaturating_loss(self):
         fake_pred = args.d(args.fake)
         loss = F.softplus(-fake_pred).mean()
         return loss
-
-
+    
     def train_prenetwork_w_ttt(self, **kwargs):
         opt = get_optimizer(args.w_ttt)
         for i in range(args.niter):
             opt.zero_grad()
             self.sample_n_stylegan_images_with_post_w_prenetwork_ttt()
-            self.calc_g_loss()
-            g_loss = g_nonsaturating_loss(fake_pred)
+            g_loss = self.g_nonsaturating_loss()
             g_loss.backward()
             opt.step()
 
@@ -155,8 +154,7 @@ class StyleGAN2TTTExperiment(TTTExperiment):
         for i in range(args.niter):
             opt.zero_grad()
             self.sample_n_stylegan_images_with_prenetwork_ttt()
-            self.calc_g_loss()
-            g_loss = g_nonsaturating_loss(fake_pred)
+            g_loss = self.g_nonsaturating_loss()
             g_loss.backward()
             opt.step()
     
@@ -165,8 +163,7 @@ class StyleGAN2TTTExperiment(TTTExperiment):
         for i in range(args.niter):
             opt.zero_grad()
             self.sample_n_stylegan_images_with_intranetwork_ttt()
-            self.calc_g_loss()
-            g_loss = g_nonsaturating_loss(fake_pred)
+            g_loss = self.g_nonsaturating_loss()
             g_loss.backward()
             opt.step()
 
@@ -176,8 +173,7 @@ class StyleGAN2TTTExperiment(TTTExperiment):
         for i in range(args.niter):
             opt.zero_grad()
             self.sample_n_stylegan_images_with_pre_and_intranetwork_ttt()
-            self.calc_g_loss()
-            g_loss = g_nonsaturating_loss(fake_pred)
+            g_loss = self.g_nonsaturating_loss()
             g_loss.backward()
             opt.step()
 
@@ -186,11 +182,10 @@ class StyleGAN2TTTExperiment(TTTExperiment):
     
     def coach_z(self, **kwargs):
         args.z = Variable(args.z, requires_grad=True)
-        opt = torch.optim.Adam([z], lr=0.01)
+        opt = torch.optim.Adam([args.z], lr=0.01)
         for j in range(10):
             self.gen_from_z()
-            self.calc_g_loss()
-            g_loss = g_nonsaturating_loss(fake_pred)
+            g_loss = self.g_nonsaturating_loss()
             g_loss.backward()
             opt.step()
 
@@ -199,7 +194,6 @@ class StyleGAN2TTTExperiment(TTTExperiment):
         opt = torch.optim.Adam([w], lr=0.01)
         for j in range(10):
             self.gen_from_w()
-            self.calc_g_loss()
-            g_loss = g_nonsaturating_loss(fake_pred)
+            g_loss = self.g_nonsaturating_loss()
             g_loss.backward()
             opt.step()
