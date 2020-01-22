@@ -57,10 +57,10 @@ def make_pdip_block(insize,arch,last=False):
 
                 nn.BatchNorm2d(insize),
                 nn.PReLU(),
-                nn.Linear(insize,insize/2),
+                nn.Conv2d(insize, insize//2, 1, stride=1, bias=False),
 
-                nn.BatchNorm2d(insize/2),
-                nn.Conv2d(insize/2, insize, 1, stride=1, bias=False)
+                nn.BatchNorm2d(insize//2),
+                nn.Conv2d(insize//2, insize, 1, stride=1, bias=False)
                 )
     elif arch =='d': #d\item FBP + x
         return nn.Sequential(
@@ -83,11 +83,11 @@ def make_pdip_block(insize,arch,last=False):
                 nn.BatchNorm2d(insize),
                 nn.PReLU(),
 
-                nn.Conv2d(insize, insize/2, 1, stride=1, bias=False),
-                nn.BatchNorm2d(insize/2),
+                nn.Conv2d(insize, insize//2, 1, stride=1, bias=False),
+                nn.BatchNorm2d(insize//2),
                 nn.PReLU(),
 
-                nn.Conv2d(insize/2, insize, 1, stride=1, bias=False),
+                nn.Conv2d(insize//2, insize, 1, stride=1, bias=False),
                 nn.BatchNorm2d(insize),
                 )
     elif arch == 'linear'  or last:

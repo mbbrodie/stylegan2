@@ -72,7 +72,7 @@ def run(args):
 from os.path import join
 import easydict
 args = easydict.EasyDict()
-args.n_eval_samples = 2
+args.n_eval_samples = 1
 args.path = '/content/stylegan2/results' #gdrive probably
 
 args.repo = './stylegan2'
@@ -115,7 +115,7 @@ torch.backends.cudnn.deterministic = True
 args.nlayer = 2
 args.arch = 'a'
 args.method = 'TNet'
-for arch in ['prelu']:
+for arch in 'cdef':
     seed = 0
     torch.manual_seed(seed)
     torch.cuda.manual_seed(seed)
