@@ -33,7 +33,9 @@ class StyleGAN2TTTExperiment(TTTExperiment):
         global args
         args = a
     def gen_from_z(self):
-        args.fake, _ = args.g([args.z])
+        args.w = args['g'].get_latent(args.z)
+        #args.fake, _ = args.g([args.z]) # determinism not working out this way
+        args.fake, _ = args.g([args.w], input_is_latent=True)
     def gen_from_w(self):
         args.fake, _ = args.g([args.w], input_is_latent=True)
 
