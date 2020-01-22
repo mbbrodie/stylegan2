@@ -9,6 +9,7 @@ from tqdm import tqdm
 
 from model import Generator
 from calc_inception import load_patched_inception_v3
+from imageio import imread
 
 ## MB METHOD
 @torch.no_grad()
@@ -41,8 +42,9 @@ def extract_feature_from_saved_samples(
         images /= 255 
 
         img = torch.from_numpy(images).type(torch.FloatTensor)
-        if cuda:
-            batch = batch.cuda()
+        #if cuda:
+        #batch = batch.cuda()
+        img = img.cuda()
 
         feat = inception(img)[0].view(img.shape[0], -1)
         features.append(feat.to('cpu'))

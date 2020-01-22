@@ -113,10 +113,17 @@ torch.backends.cudnn.benchmark = False
 torch.backends.cudnn.deterministic = True
 
 ## TESTING
-args.nlayer = 2
-args.arch = 'a'
-args.method = 'TTTz'
-for arch in ['prelu']:
+for method in 
+methods = ['TTTz','TTTw','TNet','TNet+TTT']
+layers = [2,4,8,16,32,64,128,256]
+architectures = ['prelu','a','b','c','d','e','f']
+for m in methods:
+    for arch in architectures:
+        for nl in layers:
+            args.nlayer = nl
+            args.arch = arch
+            args.method = m
+
     seed = 0
     torch.manual_seed(seed)
     torch.cuda.manual_seed(seed)
@@ -152,20 +159,12 @@ for method in comparison_methods:
 
 
 ## SAMPLE
-experiments= [
-        'TTTz',
-        'TTTw',
-        'TNet',
-        'TNet+TTT',
-        ]
-layers = [2,4,8,16,32,64,128,256]
 #a\item BPF + x
 #b\item BPF-BF + x
 #c\item BPF-BPF$_{bottleneck}$-BF + 
 #d\item FBP + x
 #e\item FBP-FB + x
 #f\item FBP-F_${bottleneck}$BP-FB + 
-architectures = ['a','b','c','d','e','f','prelu']
 #our methods
 #if args.train ==> train then sample
 for nl in nlayer:
