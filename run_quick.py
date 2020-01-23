@@ -130,7 +130,7 @@ for m in methods:
     if m == 'TTTz':
         args.lr = 0.000001
     else:
-        args.lr = 0.0001
+        args.lr = 0.00001
     for arch in architectures:
         for nl in layers:
             args.nlayer = nl
@@ -164,11 +164,12 @@ for m in methods:
 #   coachz and ttz give different lookin images (as expected)
 comparison_methods = ['normal','coachz','coachw','ttz','ttw']
 #comparison_methods = ['normal']
+args.lr = 0.0001
 for method in comparison_methods:
-    if method == 'coachz':
-        args.lr = 0.000000000001
-    else:
-    args.lr = 0.0000000001
+    #if method == 'coachz':
+    #    args.lr = 0.000000000001
+    #else:
+    #    args.lr = 0.0000000001
     print('method:',method)
 
     ## Reset random seed
