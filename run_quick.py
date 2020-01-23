@@ -95,7 +95,7 @@ import metrics
 #comparison methods
 args.truncation = 0.7
 args.lr =0.000000001
-args.niter = 1
+args.niter = 100
 args.batch_size = 2
 args.n_eval_samples = 5 
 datasets = ['ffhq','cat','horse','church','car']
@@ -119,7 +119,7 @@ args.device = 'cuda'
 ## TESTING
 #methods = ['TTTz','TTTw','TNet']
 methods = ['TTTw','TNet','TTTz']
-methods = ['TNet']
+#methods = ['TNet']
 #methods = ['TTTw','TNet','TNet+TTT']
 #methods = ['TNet','TNet+TTT']
 #methods = ['TNet+TTT']
@@ -157,8 +157,8 @@ for m in methods:
 
 #NOTE: All comparison methods work
 #   coachz and ttz give different lookin images (as expected)
-#comparison_methods = ['normal','coachz','coachw','ttz','ttw']
-comparison_methods = ['normal']
+comparison_methods = ['normal','coachz','coachw','ttz','ttw']
+#comparison_methods = ['normal']
 for method in comparison_methods:
     print('method:',method)
 
