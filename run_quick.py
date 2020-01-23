@@ -96,14 +96,14 @@ import metrics
 args.truncation = 0.7
 #args.lr =0.000000001
 args.lr =0.0000000001 #for coachz and coachw
-args.niter = 100
+args.niter = 100 
 args.batch_size = 2
-args.n_eval_samples = 5 
+args.n_eval_samples = 25000
 datasets = ['ffhq','cat','horse','church','car']
-args.dataset = 'horse'
-args.path ='/content/results'
+args.dataset = 'car'
+args.path ='/drive2/StyleGAN2Results'
 
-args.base_exp_name='quicksampleshorse'
+args.base_exp_name='quicksamples'+str(args.dataset)
 args.size = 1024 if args.dataset == 'ffhq' else 256
 args.checkpoint = 'stylegan2-%s-config-f.pt' % args.dataset
 from download import download_file_from_google_drive, gdrive_map

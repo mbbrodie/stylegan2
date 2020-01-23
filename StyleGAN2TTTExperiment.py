@@ -75,8 +75,9 @@ class StyleGAN2TTTExperiment(TTTExperiment):
     
     def sample_z(self, **kwargs):
         #sample_z = torch.randn(args.n_eval_samples, args.latent, device=args.device)
-        sample_z = torch.randn(args.batch_size, args.latent, device=args.device)
-        args['z'] = sample_z
+        #sample_z = torch.randn(args.batch_size, args.latent, device=args.device)
+        #args['z'] = sample_z
+        self.truncate_z()
 
     def sample_w(self, **kwargs):
         #if 'z' not in args.keys():
