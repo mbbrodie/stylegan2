@@ -554,10 +554,10 @@ class Generator(nn.Module):
         ):
             out = conv1(out, latent[:, i], noise=noise1)
             out = conv2(out, latent[:, i + 1], noise=noise2)
-            #res = out
-            #for t in self.ttts[j]:
-            #    out = t(out) #+ out
-            #out = out + res
+            res = out
+            for t in self.ttts[j]:
+                out = t(out) #+ out
+            out = out + res
 
             #out = ttt2(out) + out
             #if self.use_ttt:
