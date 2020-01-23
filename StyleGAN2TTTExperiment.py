@@ -11,8 +11,8 @@ from pdip import PDIP # do for generator.features
 from model import Generator, Discriminator
 from os.path import join
 from torch.autograd import Variable
+from pdip_model import Generator as PG
 
-"""
 import random
 seed = 0
 torch.manual_seed(seed)
@@ -23,7 +23,6 @@ random.seed(seed)  # Python random module.
 torch.manual_seed(seed)
 torch.backends.cudnn.benchmark = False
 torch.backends.cudnn.deterministic = True
-"""
 
 
 args = None
@@ -176,7 +175,6 @@ class StyleGAN2TTTExperiment(TTTExperiment):
         args['ttt'] = ttt.cuda()
     
     def setup_intranetwork_ttt(self, **kwargs):
-        from pdip_model import Generator as PG
         checkpoint = torch.load(args.checkpoint)
         g_ema = PG(
             args.size, args.latent, args.n_mlp, channel_multiplier=args.channel_multiplier,

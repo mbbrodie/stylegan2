@@ -34,7 +34,16 @@ def run(args):
     elif args.method == 'TTTw':
         e.train_prenetwork_w_ttt()
     print('finished train')
-        
+    seed = 0
+    torch.manual_seed(seed)
+    torch.cuda.manual_seed(seed)
+    torch.cuda.manual_seed_all(seed)  # if you are using multi-GPU.
+    np.random.seed(seed)  # Numpy module.
+    random.seed(seed)  # Python random module.
+    torch.manual_seed(seed)
+    torch.backends.cudnn.benchmark = False
+    torch.backends.cudnn.deterministic = True
+
     for i in range(args.n_eval_samples):
         ##comparison methods
         #if args.method in comparison_methods: #= ['normal','coachz','coachw','ttz','ttw']
@@ -110,6 +119,7 @@ args.device = 'cuda'
 ## TESTING
 #methods = ['TTTz','TTTw','TNet']
 methods = ['TTTw','TNet','TTTz']
+methods = ['TNet']
 #methods = ['TTTw','TNet','TNet+TTT']
 #methods = ['TNet','TNet+TTT']
 #methods = ['TNet+TTT']
@@ -147,7 +157,8 @@ for m in methods:
 
 #NOTE: All comparison methods work
 #   coachz and ttz give different lookin images (as expected)
-comparison_methods = ['normal','coachz','coachw','ttz','ttw']
+#comparison_methods = ['normal','coachz','coachw','ttz','ttw']
+comparison_methods = ['normal']
 for method in comparison_methods:
     print('method:',method)
 

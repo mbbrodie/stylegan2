@@ -13,7 +13,6 @@ from pdip import make_pdip_block
 
 import random
 import numpy as np
-"""
 seed = 0
 torch.manual_seed(seed)
 torch.cuda.manual_seed(seed)
@@ -23,7 +22,6 @@ random.seed(seed)  # Python random module.
 torch.manual_seed(seed)
 torch.backends.cudnn.benchmark = False
 torch.backends.cudnn.deterministic = True
-"""
 
 class PixelNorm(nn.Module):
     def __init__(self):
@@ -556,12 +554,11 @@ class Generator(nn.Module):
         ):
             out = conv1(out, latent[:, i], noise=noise1)
             out = conv2(out, latent[:, i + 1], noise=noise2)
-            res = out
-            for t in self.ttts[j]:
-                out = t(out) #+ out
+            #res = out
+            #for t in self.ttts[j]:
+            #    out = t(out) #+ out
             #out = out + res
-            #null test --is our initialization just wrong?
-            out =  res
+
             #out = ttt2(out) + out
             #if self.use_ttt:
             #    out = self.ttt(out) + out
