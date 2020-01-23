@@ -114,7 +114,7 @@ class StyleGAN2TTTExperiment(TTTExperiment):
     def sample_n_stylegan_images_with_z_tt(self, **kwargs):
         ### the paper says tt doesn't work with z
         self.sample_z()
-        self.truncate_z()
+        #self.truncate_z()
         self.gen_from_z()
     
     def sample_n_stylegan_images_with_coachgan(self, **kwargs):
