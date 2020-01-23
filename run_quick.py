@@ -96,11 +96,11 @@ import metrics
 args.truncation = 0.7
 #args.lr =0.000000001
 args.lr =0.0000000001 #for coachz and coachw
-args.niter = 100 
+args.niter = 500 
 args.batch_size = 2
 args.n_eval_samples = 25000
 datasets = ['ffhq','cat','horse','church','car']
-args.dataset = 'car'
+args.dataset = 'cat'
 args.path ='/drive2/StyleGAN2Results'
 
 args.base_exp_name='quicksamples'+str(args.dataset)
@@ -119,12 +119,12 @@ args.device = 'cuda'
 
 ## TESTING
 methods = ['TTTw','TNet','TTTz']
-architectures = ['prelu','a','b','c','d','e','f']
+architectures = ['prelu']#,'a','b','c','d','e','f']
 for m in methods:
     if m in ['TTTz','TTTw']:
-        layers = [2,4,8,16,32]
+        layers = [2]#,4]#,8,16,32]
     else:
-        layers = [2,4]
+        layers = [2]#,4]
 
     if m == 'TTTz':
         args.lr = 0.000001
@@ -161,7 +161,7 @@ for m in methods:
 
 #NOTE: All comparison methods work
 #   coachz and ttz give different lookin images (as expected)
-comparison_methods = ['normal','coachz','coachw','ttz','ttw']
+comparison_methods = ['coachz','coachw','ttz','ttw']
 #comparison_methods = ['normal']
 args.lr = 0.0001
 for method in comparison_methods:
