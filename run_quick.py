@@ -94,7 +94,8 @@ import metrics
 
 #comparison methods
 args.truncation = 0.7
-args.lr =0.000000001
+#args.lr =0.000000001
+args.lr =0.0000000001 #for coachz and coachw
 args.niter = 100
 args.batch_size = 2
 args.n_eval_samples = 5 
@@ -126,6 +127,10 @@ methods = ['TTTw','TNet','TTTz']
 architectures = ['prelu']
 layers = [2]
 for m in methods:
+    if m == 'TTTz':
+        args.lr = 0.000001
+    else:
+        args.lr = 0.0001
     for arch in architectures:
         for nl in layers:
             args.nlayer = nl
@@ -160,6 +165,10 @@ for m in methods:
 comparison_methods = ['normal','coachz','coachw','ttz','ttw']
 #comparison_methods = ['normal']
 for method in comparison_methods:
+    if method == 'coachz':
+        args.lr = 0.000000000001
+    else:
+    args.lr = 0.0000000001
     print('method:',method)
 
     ## Reset random seed
