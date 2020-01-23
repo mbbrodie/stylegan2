@@ -118,15 +118,14 @@ args.n_mlp = 8
 args.device = 'cuda'
 
 ## TESTING
-#methods = ['TTTz','TTTw','TNet']
 methods = ['TTTw','TNet','TTTz']
-#methods = ['TNet']
-#methods = ['TTTw','TNet','TNet+TTT']
-#methods = ['TNet','TNet+TTT']
-#methods = ['TNet+TTT']
-architectures = ['prelu']
-layers = [2]
+architectures = ['prelu','a','b','c','d','e','f']
 for m in methods:
+    if m in ['TTTz','TTTw']:
+        layers = [2,4,8,16,32]
+    else:
+        layers = [2,4]
+
     if m == 'TTTz':
         args.lr = 0.000001
     else:
