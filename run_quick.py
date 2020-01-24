@@ -69,6 +69,7 @@ def run(args):
             e.sample_n_stylegan_images_with_pre_and_intranetwork_ttt()
 
         e.save_results(num=i*args.batch_size)
+    e.transfer_results()
     #e.calc_metrics()
 
 #parser = argparse.ArgumentParser()
@@ -92,6 +93,9 @@ tflib.init_tf()
 
 import metrics
 
+args.tempdir = '/content/temp/'
+if not os.path.exists(args.tempdir):
+    os.makedirs(args.tempdir)
 #comparison methods
 args.truncation = 0.7
 #args.lr =0.000000001

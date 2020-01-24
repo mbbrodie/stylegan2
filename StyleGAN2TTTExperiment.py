@@ -9,9 +9,11 @@ from torchvision.utils import save_image
 from ttt import TTT
 from pdip import PDIP # do for generator.features
 from model import Generator, Discriminator
+import os
 from os.path import join
 from torch.autograd import Variable
 from pdip_model import Generator as PG
+from zipfile import ZipFile
 
 import random
 seed = 0
@@ -71,7 +73,20 @@ class StyleGAN2TTTExperiment(TTTExperiment):
             images = img.cpu()
             images = images.unsqueeze(0)
             images = torch.nn.functional.interpolate(images,size=(299,299))
-            save_image(images, join(args.savedir, str(kwargs['num']+i)+'.png'),normalize=True)
+            #save_image(images, join(args.savedir, str(kwargs['num']+i)+'.png'),normalize=True)
+            save_image(images, join(args.tempdir, str(kwargs['num']+i)+'.png'),normalize=True)
+    def transfer_results(self):
+        if args.method in ['TTTz','TTTw','TNet','TNet+TTT']:
+            zipname = join(  args.base_exp_name,  args.method+args.arch+str(args.nlayer))
+        else:
+            zipname = join(  args.base_exp_name,  args.method)
+        files = os.listdir(args.tempdir) 
+        with ZipFile(zipname,'w') as z:
+            for f in files:
+                z.write(join(args.tempdir,f))
+        os.rename(zipname, join(os.savedir,zipname))
+        
+                        
     
     def sample_z(self, **kwargs):
         #sample_z = torch.randn(args.n_eval_samples, args.latent, device=args.device)
