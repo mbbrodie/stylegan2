@@ -14,6 +14,7 @@ from os.path import join
 from torch.autograd import Variable
 from pdip_model import Generator as PG
 from zipfile import ZipFile
+import shutil
 
 import random
 seed = 0
@@ -77,14 +78,15 @@ class StyleGAN2TTTExperiment(TTTExperiment):
             save_image(images, join(args.tempdir, str(kwargs['num']+i)+'.png'),normalize=True)
     def transfer_results(self):
         if args.method in ['TTTz','TTTw','TNet','TNet+TTT']:
-            zipname = join(  args.base_exp_name,  args.method+args.arch+str(args.nlayer))
+            zipname =  args.base_exp_name+  args.method+args.arch+str(args.nlayer)
         else:
-            zipname = join(  args.base_exp_name,  args.method)
+            zipname =   args.base_exp_name+  args.method
+        zipname = zipname 
         files = os.listdir(args.tempdir) 
         with ZipFile(zipname,'w') as z:
             for f in files:
                 z.write(join(args.tempdir,f))
-        os.rename(zipname, join(os.savedir,zipname))
+        shutil.move(zipname, join(args.savedir,zipname))
         
                         
     

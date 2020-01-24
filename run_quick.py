@@ -100,9 +100,9 @@ if not os.path.exists(args.tempdir):
 args.truncation = 0.7
 #args.lr =0.000000001
 args.lr =0.0000000001 #for coachz and coachw
-args.niter = 500 
+args.niter = 5#00 
 args.batch_size = 2
-args.n_eval_samples = 25000
+args.n_eval_samples = 25#000
 datasets = ['ffhq','cat','horse','church','car']
 args.dataset = 'cat'
 args.path ='/drive2/StyleGAN2Results'
